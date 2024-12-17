@@ -1,6 +1,4 @@
-import { isAuthenticated } from "@/lib/auth/utils"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import Link from "next/link"
 import {
@@ -14,25 +12,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
 import { SpotifyUser } from "@/types"
 import { useSpotify } from "@/hooks/useSpotify"
 import { cn, getInitials } from "@/lib/utils"
-import { Spinner } from "./Icons"
+import useIsAuthenticated from "@/hooks/useIsAuthenticated"
 
 const AuthButton = () => {
   const router = useRouter()
-  const [authenticated, setAuthenticated] = useState(false)
   const { data: userInfo, isLoading } = useSpotify<SpotifyUser>("/me")
-  // const [userInfo, setUserInfo] = useState<SpotifyUser | null>(null)
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const result = await isAuthenticated()
-        setAuthenticated(result)
-      } catch (error) {
-        console.error("Error in checkAuth:", error)
-      }
-    }
-    checkAuth()
-  }, [])
+  const { isAuthenticated, deauthenticateUser } = useIsAuthenticated()
 
   const handleLogout = async () => {
     const res = await fetch("/api/logout", {
@@ -41,7 +26,7 @@ const AuthButton = () => {
     })
 
     if (res.ok) {
-      setAuthenticated(false)
+      deauthenticateUser()
       router.push("/")
     }
   }
@@ -57,8 +42,8 @@ const AuthButton = () => {
   }
 
   return (
-    <div className={cn(authenticated && userInfo ? "-mx-1" : "mx-2")}>
-      {authenticated && userInfo ? (
+    <div className={cn(isAuthenticated && userInfo ? "-mx-1" : "mx-2")}>
+      {isAuthenticated && userInfo ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="rounded-full">

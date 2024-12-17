@@ -1,9 +1,9 @@
 "use server"
 import { Context } from "hono"
-import { deleteCookie, getCookie } from "hono/cookie"
+import { deleteCookie } from "hono/cookie"
 import { cookies } from "next/headers"
 
-export const isAuthenticated = async () => {
+export const ServerCheckAuth = async () => {
   const cookiesStore = await cookies()
   return cookiesStore.has("access_token")
 }

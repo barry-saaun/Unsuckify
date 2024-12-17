@@ -1,5 +1,4 @@
 import { Context } from "hono"
-import { spotifyApi } from "./spotify"
 
 type ErrorResponse = {
   ErrMsg: string
