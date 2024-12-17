@@ -1,16 +1,16 @@
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-const publicRoute = ["/api/login", "/api/callback"]
+const publicRoute = ["/api/login", "/api/callback", "/login"]
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
   const isPublicRoute = publicRoute.includes(path)
 
-  const cookieStore = await cookies()
-  const access_token = cookieStore.get("accessToken")?.value
+  const cookiesStore = await cookies()
+  const authenticated = cookiesStore.has("access_token")
 
-  if (isPublicRoute && access_token !== undefined) {
+  if (isPublicRoute && authenticated) {
     return NextResponse.redirect(new URL("/", req.nextUrl))
   }
 

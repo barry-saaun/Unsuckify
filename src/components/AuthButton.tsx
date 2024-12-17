@@ -20,13 +20,12 @@ const AuthButton = () => {
   const router = useRouter()
   const [authenticated, setAuthenticated] = useState(false)
 
-  const { data: userInfo, isLoading, isError } = useSpotify<SpotifyUser>("/me")
+  const { data: userInfo, isLoading } = useSpotify<SpotifyUser>("/me")
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const result = await isAuthenticated()
-        console.log("Authentication result:", result) // Log the result
         setAuthenticated(result)
       } catch (error) {
         console.error("Error in checkAuth:", error)
@@ -46,16 +45,6 @@ const AuthButton = () => {
       router.push("/")
     }
   }
-
-  // if (!authenticated || !userInfo) {
-  //   return (
-  //     <div className="mx-2">
-  //       <Button className="font-semibold">
-  //         <Link href="/api/login">Login</Link>
-  //       </Button>
-  //     </div>
-  //   )
-  // }
 
   if (isLoading) {
     return (
