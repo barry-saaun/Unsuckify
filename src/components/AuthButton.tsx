@@ -1,6 +1,5 @@
 import { useRouter } from "next/navigation"
 import { Button } from "./ui/button"
-import Link from "next/link"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,10 +41,10 @@ const AuthButton = () => {
   }
 
   return (
-    <div className={cn(isAuthenticated && userInfo ? "-mx-1" : "mx-2")}>
+    <div className={cn(isAuthenticated && userInfo ? "mx-2" : "")}>
       {isAuthenticated && userInfo ? (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="w-9 h-9">
             <Button variant="ghost" className="rounded-full">
               <Avatar className="w-8 h-8 ">
                 <AvatarImage src={userInfo.images[0]?.url} />
@@ -58,7 +57,7 @@ const AuthButton = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="px-2">
               <div
-                className="flex justify-between items-center gap-10"
+                className="flex justify-between items-center gap-10 cursor-pointer"
                 onClick={() =>
                   window.open(`https://open.spotify.com/user/${userInfo?.id}`)
                 }
@@ -84,11 +83,7 @@ const AuthButton = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      ) : (
-        <Button className="font-semibold">
-          <Link href="/login">Login</Link>
-        </Button>
-      )}
+      ) : null}
     </div>
   )
 }

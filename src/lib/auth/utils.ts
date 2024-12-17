@@ -11,7 +11,6 @@ export const ServerCheckAuth = async () => {
 export const deleteSession = async (c: Context) => {
   const deletedKeys = ["access_token", "expires_at", "refresh_token"]
 
-  // const cookiesStore = getCookie(c)
   deletedKeys.forEach((key) => deleteCookie(c, key))
 }
 

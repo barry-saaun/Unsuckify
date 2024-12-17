@@ -84,7 +84,8 @@ export async function getOAuthCode(c: Context) {
       })
     }
 
-    return c.redirect("/?success=true")
+    // return c.redirect("/?success=true")
+    return c.redirect("/dashboard")
   } catch (error) {
     return c.redirect("/?error=token_error")
   }
