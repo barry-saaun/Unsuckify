@@ -84,18 +84,6 @@ export async function getOAuthCode(c: Context) {
       })
     }
 
-    // cookiesStore.set({
-    //   name: "spotify_tokens",
-    //   value: JSON.stringify({
-    //     access_token,
-    //     expires_at: Date.now() + expires_in * 1000,
-    //     refresh_token
-    //   }),
-    //   httpOnly: true,
-    //   secure: true,
-    //   maxAge: expires_in
-    // })
-
     return c.redirect("/?success=true")
   } catch (error) {
     return c.redirect("/?error=token_error")

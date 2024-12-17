@@ -19,8 +19,8 @@ import { Spinner } from "./Icons"
 const AuthButton = () => {
   const router = useRouter()
   const [authenticated, setAuthenticated] = useState(false)
-
   const { data: userInfo, isLoading } = useSpotify<SpotifyUser>("/me")
+  // const [userInfo, setUserInfo] = useState<SpotifyUser | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -101,7 +101,7 @@ const AuthButton = () => {
         </DropdownMenu>
       ) : (
         <Button className="font-semibold">
-          <Link href="/api/login">Login</Link>
+          <Link href="/login">Login</Link>
         </Button>
       )}
     </div>
