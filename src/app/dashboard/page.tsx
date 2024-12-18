@@ -1,9 +1,9 @@
 "use client"
 import { useSpotify } from "@/hooks/useSpotify"
-import { SpotifyUser } from "@/types"
+import { CurrentUsersProfileResponse } from "spotify-api"
 
 export default function DashboardPage() {
-  const { data: userInfo, isLoading, error } = useSpotify<SpotifyUser>("me")
+  const { data: userInfo, isLoading, error } = useSpotify<CurrentUsersProfileResponse>("me")
 
   if (isLoading) return <div>Loading...</div> // Show loading state
 

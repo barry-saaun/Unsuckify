@@ -8,14 +8,14 @@ import {
 import { DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { LogOutIcon, UserRound } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
-import { SpotifyUser } from "@/types"
+import { CurrentUsersProfileResponse } from "spotify-api"
 import { useSpotify } from "@/hooks/useSpotify"
 import { cn, getInitials } from "@/lib/utils"
 import useIsAuthenticated from "@/hooks/useIsAuthenticated"
 
 const AuthButton = () => {
   const router = useRouter()
-  const { data: userInfo, isLoading } = useSpotify<SpotifyUser>("/me")
+  const { data: userInfo, isLoading } = useSpotify<CurrentUsersProfileResponse>("/me")
   const { isAuthenticated, deauthenticateUser } = useIsAuthenticated()
 
   const handleLogout = async () => {
@@ -47,9 +47,9 @@ const AuthButton = () => {
           <DropdownMenuTrigger asChild className="w-9 h-9">
             <Button variant="ghost" className="rounded-full">
               <Avatar className="w-8 h-8 ">
-                <AvatarImage src={userInfo.images[0]?.url} />
+                <AvatarImage src={userInfo?.images?.[0]?.url} />
                 <AvatarFallback>
-                  {getInitials(userInfo?.display_name)}
+                  {getInitials(userInfo?.display_name ?? "")}
                 </AvatarFallback>
               </Avatar>
             </Button>

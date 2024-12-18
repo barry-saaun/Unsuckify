@@ -17,7 +17,7 @@ app.get("/login", getAuthEndpointUrl)
 
 app.get("/callback", getOAuthCode)
 
-app.get("/me", (c) => serverGetData(c, spotifyApi.getCurrentUser))
+app.get("/me", (c) => serverGetData(c, spotifyApi.getCurrentUsersProfile))
 
 app.post("/logout", logout)
 

@@ -1,4 +1,4 @@
-import { SpotifyUser } from "@/types"
+import type { CurrentUsersProfileResponse } from "spotify-api"
 import axios from "axios"
 import { cookies } from "next/headers"
 
@@ -34,5 +34,5 @@ export async function spotifyFetch<T>(
 }
 
 export const spotifyApi = {
-  getCurrentUser: () => spotifyFetch<SpotifyUser>("/me")
+  getCurrentUsersProfile: () => spotifyFetch<CurrentUsersProfileResponse>("/me")
 }
