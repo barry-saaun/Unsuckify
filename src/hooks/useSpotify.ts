@@ -12,7 +12,7 @@ export function useSpotify<T>(serverEndpoint: string) {
     enabled: isAuthenticated === true,
     queryFn: async () => {
       try {
-        const { data } = await axios.get(`/api/${serverEndpoint}`)
+        const { data } = await axios.get(`/api${serverEndpoint}`)
         return data
       } catch (error) {
         console.error(error)

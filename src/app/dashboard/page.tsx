@@ -1,20 +1,22 @@
 "use client"
 import { useSpotify } from "@/hooks/useSpotify"
-import { CurrentUsersProfileResponse } from "spotify-api"
+import { usePlaylistsIdStore } from "@/stores/playlist_id"
+import { ListOfCurrentUsersPlaylistsResponse } from "spotify-api"
 
 export default function DashboardPage() {
-  const { data: userInfo, isLoading, error } = useSpotify<CurrentUsersProfileResponse>("me")
+  const { data, isLoading, error } =
+    useSpotify<ListOfCurrentUsersPlaylistsResponse>("/me/playlist")
+
+  const playlistId = usePlaylistsIdStore((state) => state.playlistsId)
+  const add_playlistId = usePlaylistsIdStore((state) => state.add_playlistId)
+
+  if (!data) return <div>No user data available</div> // Handle case with no user data
+
+  add_playlistId(data)
 
   if (isLoading) return <div>Loading...</div> // Show loading state
 
   if (error) return <p>Error</p>
-  if (!userInfo) return <div>No user data available</div> // Handle case with no user data
 
-  return (
-    <div>
-      <h1>Hello, Welcome {userInfo.display_name}</h1>
-      <div>Your Email: {userInfo.email}</div>
-      <div>{JSON.stringify(userInfo)}</div>
-    </div>
-  )
+  return <div>{JSON.stringify(playlistId)}</div>
 }

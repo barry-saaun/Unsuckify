@@ -7,7 +7,7 @@ export async function getAccessToken() {
   return cookiesStore.get("access_token")?.value
 }
 
-export async function spotifyFetch<T>(
+async function spotifyFetch<T>(
   endpoint: string
 ): Promise<T | { ErrMsg: string }> {
   try {
