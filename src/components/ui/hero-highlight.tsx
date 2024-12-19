@@ -62,7 +62,7 @@ export const HeroHighlight = ({
 
 export const Highlight = ({
   children,
-  isBlock,
+  isBlock = false,
   className
 }: {
   children: React.ReactNode
