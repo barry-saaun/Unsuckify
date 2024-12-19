@@ -1,5 +1,4 @@
 import { create } from "zustand"
-import { ListOfCurrentUsersPlaylistsResponse } from "spotify-api"
 
 interface PlaylistsIdState {
   playlistsId: string[]
@@ -8,18 +7,6 @@ interface PlaylistsIdState {
   clear: () => void
 }
 
-/*
- * To use simply memoize the add_playlistId function to ensure it doesn't triggers re-render
- *
- * const stableAddPlaylistId = useMemo(() => add_playlistId, [add_playlistId])
- *
-  useEffect(() => {
-    if (data) {
-      stableAddPlaylistId(data)
-    }
-  }, [data, stableAddPlaylistId])
- * 
- */
 const usePlaylistsIdStore = create<PlaylistsIdState>()((set, get) => ({
   playlistsId: [],
   processedData: new Set(),
