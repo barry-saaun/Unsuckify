@@ -4,3 +4,10 @@ declare module "spotify-api" {
   export type ListOfCurrentUsersPlaylistsResponse =
     SpotifyApi.ListOfCurrentUsersPlaylistsResponse
 }
+
+declare module "tailwindcss/lib/util/flattenColorPalette" {
+  const flattenColorPalette: (
+    colors: Record<string, any>
+  ) => Record<string, string>
+  export default flattenColorPalette
+}

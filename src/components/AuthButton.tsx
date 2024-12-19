@@ -15,7 +15,8 @@ import useIsAuthenticated from "@/hooks/useIsAuthenticated"
 
 const AuthButton = () => {
   const router = useRouter()
-  const { data: userInfo, isLoading } = useSpotify<CurrentUsersProfileResponse>("/me")
+  const { data: userInfo, isLoading } =
+    useSpotify<CurrentUsersProfileResponse>("/me")
   const { isAuthenticated, deauthenticateUser } = useIsAuthenticated()
 
   const handleLogout = async () => {

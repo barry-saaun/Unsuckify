@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link"
-import { Button } from "./ui/button"
 import useIsAuthenticated from "@/hooks/useIsAuthenticated"
+import { Highlight } from "./ui/hero-highlight"
+import { HoverBorderGradient } from "./ui/hover-border-gradient"
 
 const HeroSection = () => {
   const { isAuthenticated } = useIsAuthenticated()
@@ -11,36 +12,40 @@ const HeroSection = () => {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2 md:space-y-6">
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tighter ">
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tighter leading-relaxed ">
                 Your{" "}
                 <span className="text-green-500 dark:text-green-400">
                   Spotify
                 </span>{" "}
-                Playlist Sucks? Let&apos;s unsuck it.
+                Playlist Sucks?
+                <Highlight isBlock>Let&apos;s unsuck it.</Highlight>
               </h1>
               <p className="mx-auto max-w-[700px] text-gray-500 sm:text-lg md:text-xl dark:text-gray-400">
                 Transform your <span className="font-bold">mid</span> spotify
                 playlist to JSON format and received songs recommendation from
                 AI.
               </p>
-              <div className="py-10 md:py-16">
-                <Button className="px-8 py-6">
+              <div className="py-10 md:py-16 flex justify-center items-center">
+                <HoverBorderGradient
+                  containerClassName="rounded-full"
+                  as="button"
+                >
                   {isAuthenticated ? (
                     <Link
                       href="/dashboard"
-                      className="text-sm md:text-xl   font-bold"
+                      className="text-sm md:text-xl   font-thin"
                     >
                       Go to Dashboard
                     </Link>
                   ) : (
                     <Link
                       href="/login"
-                      className="text-sm md:text-xl   font-bold"
+                      className="text-sm md:text-xl   font-thin"
                     >
                       Get Started
                     </Link>
                   )}
-                </Button>
+                </HoverBorderGradient>
               </div>
             </div>
           </div>
