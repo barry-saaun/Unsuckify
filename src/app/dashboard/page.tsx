@@ -1,21 +1,32 @@
 "use client"
-import useFetchPlaylistsId from "@/hooks/useFetchPlaylistsId"
+
+import MyPlaylistsTabContent from "@/components/MyPlaylistsTabContent"
+import NavBar from "@/components/Navbar"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function DashboardPage() {
-  const { playlistsId, isLoading, error, clear } = useFetchPlaylistsId()
-
-  if (isLoading) return <div className="px-10 py-10">Loading...</div> // Show loading state
-
-  if (error) return <p>Error</p>
-
   return (
-    <div className="flex justify-between px-10 py-10">
-      <div>
-        {playlistsId.map((id, idx) => (
-          <h1 key={idx}>{id}</h1>
-        ))}
+    <div className="min-h-screen w-full flex flex-col">
+      <NavBar />
+
+      <div className="mx-10 py-10 space-y-5 ">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+          Your Playlists
+        </h1>
+        <Tabs defaultValue="my-playlists">
+          <TabsList>
+            <TabsTrigger value="my-playlists" className="font-bold">
+              My Playlists
+            </TabsTrigger>
+            <TabsTrigger value="public-playlist" className="font-bold">
+              Public Playlist
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="my-playlists">
+            <MyPlaylistsTabContent />
+          </TabsContent>
+        </Tabs>
       </div>
-      <button onClick={clear}>Clear</button>
     </div>
   )
 }

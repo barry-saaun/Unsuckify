@@ -11,7 +11,7 @@ const NavBar: React.FC = () => {
   return (
     <header className="flex flex-row justify-between items-center px-4 py-4">
       <Link
-        href="#"
+        href="/"
         className="flex flex-row justify-center items-center gap-1"
       >
         <Disc2 className="text-primary" />
