@@ -19,6 +19,10 @@ app.get("/callback", getOAuthCode)
 
 app.get("/me", (c) => serverGetData(c, spotifyApi.getCurrentUsersProfile))
 
+app.get("/me/playlists", (c) =>
+  serverGetData(c, spotifyApi.getListOfCurrentUsersPlaylists)
+)
+
 app.post("/logout", logout)
 
 export const GET = handle(app)
