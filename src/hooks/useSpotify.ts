@@ -1,15 +1,15 @@
-import Error from "next/error"
-
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 import axios from "axios"
 import useIsAuthenticated from "./useIsAuthenticated"
 
-export function useSpotify<T>(serverEndpoint: string) {
+export function useSpotify<T>(serverEndpoint: string, staleTime?: number) {
   const { isAuthenticated } = useIsAuthenticated()
 
-  return useQuery<T, Error>({
+  const queryOptions: UseQueryOptions<T, Error> = {
     queryKey: [serverEndpoint],
     enabled: isAuthenticated === true,
+    // conditionally include staleTime
+    ...(staleTime !== undefined && { staleTime }),
     queryFn: async () => {
       try {
         const { data } = await axios.get(`/api${serverEndpoint}`)
@@ -18,5 +18,7 @@ export function useSpotify<T>(serverEndpoint: string) {
         console.error(error)
       }
     }
-  })
+  }
+
+  return useQuery<T, Error>(queryOptions)
 }

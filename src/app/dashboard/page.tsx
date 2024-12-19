@@ -1,26 +1,21 @@
 "use client"
-import { useSpotify } from "@/hooks/useSpotify"
-import usePlaylistsIdStore from "@/stores/playlist_id"
-import { ListOfCurrentUsersPlaylistsResponse } from "spotify-api"
+import useFetchPlaylistsId from "@/hooks/useFetchPlaylistsId"
 
 export default function DashboardPage() {
-  const { data, isLoading, error } =
-    useSpotify<ListOfCurrentUsersPlaylistsResponse>("/me/playlists")
+  const { playlistsId, isLoading, error, clear } = useFetchPlaylistsId()
 
-  const playlistId = usePlaylistsIdStore((state) => state.playlistsId)
-  const add_playlistId = usePlaylistsIdStore((state) => state.add_playlistId)
-
-  // useEffect(() => {
-  //   if (data) {
-  //     add_playlistId(data)
-  //   }
-  // }, [playlistId, add_playlistId, data])
-
-  if (isLoading) return <div>Loading...</div> // Show loading state
+  if (isLoading) return <div className="px-10 py-10">Loading...</div> // Show loading state
 
   if (error) return <p>Error</p>
 
   return (
-    <div>{data?.items.map((item) => <div key={item.name}>{item.id}</div>)}</div>
+    <div className="flex justify-between px-10 py-10">
+      <div>
+        {playlistsId.map((id, idx) => (
+          <h1 key={idx}>{id}</h1>
+        ))}
+      </div>
+      <button onClick={clear}>Clear</button>
+    </div>
   )
 }
