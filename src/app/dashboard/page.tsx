@@ -1,6 +1,6 @@
 "use client"
 import { useSpotify } from "@/hooks/useSpotify"
-import { usePlaylistsIdStore } from "@/stores/playlist_id"
+import usePlaylistsIdStore from "@/stores/playlist_id"
 import { ListOfCurrentUsersPlaylistsResponse } from "spotify-api"
 
 export default function DashboardPage() {
