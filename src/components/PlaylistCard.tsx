@@ -10,6 +10,7 @@ import {
 import Image from "next/image"
 import { Button } from "./ui/button"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export interface PlaylistCardProps {
   playlistImg: string
@@ -24,6 +25,7 @@ const PlaylistCard = ({
   owner,
   numberOfTracks
 }: PlaylistCardProps) => {
+  const router = useRouter()
   return (
     <Card className="overflow-hidden">
       <div className="aspect-square relative">
@@ -49,7 +51,7 @@ const PlaylistCard = ({
         </p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full h-full mx-2">
+        <Button className="w-full h-full mx-2" onClick={() => router.push("/")}>
           <Link href="/" className="font-semibold">
             Unsuckify
           </Link>
