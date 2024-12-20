@@ -31,7 +31,9 @@ const PlaylistCard = ({
           fill
           src={playlistImg}
           alt={playlistName}
+          priority
           className="object-cover bg-red-400"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
       <CardHeader>
