@@ -1,6 +1,7 @@
 import type {
   CurrentUsersProfileResponse,
-  ListOfCurrentUsersPlaylistsResponse
+  ListOfCurrentUsersPlaylistsResponse,
+  SinglePlaylistResponse
 } from "spotify-api"
 import { cookies } from "next/headers"
 
@@ -10,7 +11,8 @@ export async function getAccessToken() {
 }
 
 async function spotifyFetch<T>(
-  endpoint: string
+  endpoint: string,
+  params?: Record<string, string>
 ): Promise<T | { ErrMsg: string }> {
   try {
     const access_token = await getAccessToken()
@@ -20,7 +22,15 @@ async function spotifyFetch<T>(
     }
 
     const baseUrl = "https://api.spotify.com/v1"
-    const url = `${baseUrl}${endpoint}`
+
+    const resolvedEndpoint = params
+      ? Object.keys(params).reduce(
+          (url, key) => url.replace(`{${key}}`, params[key]),
+          endpoint
+        )
+      : endpoint
+
+    const url = `${baseUrl}${resolvedEndpoint}`
 
     const res = await fetch(url, {
       method: "GET",
@@ -47,5 +57,9 @@ export const spotifyApi = {
   getCurrentUsersProfile: () =>
     spotifyFetch<CurrentUsersProfileResponse>("/me"),
   getListOfCurrentUsersPlaylists: () =>
-    spotifyFetch<ListOfCurrentUsersPlaylistsResponse>("/me/playlists")
+    spotifyFetch<ListOfCurrentUsersPlaylistsResponse>("/me/playlists"),
+  getSinglePlaylistData: (playlist_id: string) =>
+    spotifyFetch<SinglePlaylistResponse>("/playlists/{playlist_id}", {
+      playlist_id
+    })
 }
