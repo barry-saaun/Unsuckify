@@ -34,9 +34,10 @@ const AuthButton = () => {
   if (isLoading) {
     return (
       <div className="mx-2">
-        <Button disabled className="font-semibold">
-          Loading...
-        </Button>
+        <Button
+          disabled
+          className="font-semibold w-9 h-9 dark:bg-gray-600 bg-gray-100 rounded-full animate-pulse"
+        />
       </div>
     )
   }
