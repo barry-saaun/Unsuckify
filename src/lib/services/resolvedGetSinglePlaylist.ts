@@ -5,7 +5,7 @@ import { serverGetData } from "./serverGetData"
 export async function resolvedGetSinglePlaylist(c: Context) {
   try {
     const playlist_id = c.req.param("playlist_id")
-    const data = await spotifyApi.getSinglePlaylistData(playlist_id)
+    const data = await spotifyApi.getPlaylistTrack(playlist_id)
 
     if ("ErrMsg" in data) {
       // Return an error response in the expected format

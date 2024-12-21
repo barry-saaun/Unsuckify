@@ -1,7 +1,7 @@
 import type {
   CurrentUsersProfileResponse,
   ListOfCurrentUsersPlaylistsResponse,
-  SinglePlaylistResponse
+  PlaylistTrackResponse
 } from "spotify-api"
 import { cookies } from "next/headers"
 
@@ -58,8 +58,8 @@ export const spotifyApi = {
     spotifyFetch<CurrentUsersProfileResponse>("/me"),
   getListOfCurrentUsersPlaylists: () =>
     spotifyFetch<ListOfCurrentUsersPlaylistsResponse>("/me/playlists"),
-  getSinglePlaylistData: (playlist_id: string) =>
-    spotifyFetch<SinglePlaylistResponse>("/playlists/{playlist_id}", {
+  getPlaylistTrack: (playlist_id: string) =>
+    spotifyFetch<PlaylistTrackResponse>("/playlists/{playlist_id}/tracks", {
       playlist_id
     })
 }
