@@ -5,6 +5,10 @@ import type {
 } from "spotify-api"
 import { cookies } from "next/headers"
 
+export type SpotifyFetchReturnType<T> = Promise<
+  T | { success: false; error: string }
+>
+
 export async function getAccessToken() {
   const cookiesStore = await cookies()
   return cookiesStore.get("access_token")?.value
@@ -13,12 +17,12 @@ export async function getAccessToken() {
 async function spotifyFetch<T>(
   endpoint: string,
   params?: Record<string, string>
-): Promise<T | { ErrMsg: string }> {
+): SpotifyFetchReturnType<T> {
   try {
     const access_token = await getAccessToken()
 
     if (!access_token) {
-      return { ErrMsg: "Access token is missing or invalid" }
+      return { success: false, error: "Access Token is missing or invalid" }
     }
 
     const baseUrl = "https://api.spotify.com/v1"
@@ -42,14 +46,14 @@ async function spotifyFetch<T>(
 
     if (!res.ok) {
       console.error(`Error fetching data: ${res.statusText}`)
-      return { ErrMsg: `Error: ${res.status} ${res.statusText}` }
+      return { success: false, error: `Error: ${res.status} ${res.statusText}` }
     }
 
     const data = await res.json()
-    return data
+    return data as T
   } catch (error) {
     console.error(error)
-    return { ErrMsg: "Error in Fetching spotify data" }
+    return { success: false, error: `Error in fetching Spotify Data` }
   }
 }
 

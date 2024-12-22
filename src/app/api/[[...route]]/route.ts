@@ -1,6 +1,6 @@
 import { getAuthEndpointUrl, getOAuthCode } from "@/lib/auth/getAuthCode"
 import { logout } from "@/lib/auth/utils"
-import { resolvedGetSinglePlaylist } from "@/lib/services/resolvedGetSinglePlaylist"
+import getApiDataWithParam from "@/lib/services/getApiDataWithParam"
 import { serverGetData } from "@/lib/services/serverGetData"
 import { spotifyApi } from "@/lib/services/spotify"
 import { Hono } from "hono"
@@ -24,7 +24,9 @@ app.get("/me/playlists", (c) =>
   serverGetData(c, spotifyApi.getListOfCurrentUsersPlaylists)
 )
 
-app.get("/playlists/:playlist_id/tracks", (c) => resolvedGetSinglePlaylist(c))
+app.get("/playlists/:playlist_id/tracks", (c) =>
+  getApiDataWithParam(c, spotifyApi.getPlaylistTrack, "playlist_id")
+)
 
 app.post("/logout", logout)
 

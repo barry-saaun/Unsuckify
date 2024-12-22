@@ -1,11 +1,11 @@
 import { Context } from "hono"
 
 type ErrorResponse = {
-  ErrMsg: string
+  error: string
 }
 
 function isErrorResponse(data: unknown): data is ErrorResponse {
-  return typeof data === "object" && data !== null && "ErrMsg" in data
+  return typeof data === "object" && data !== null && "error" in data
 }
 
 export async function serverGetData<T extends object | null>(
@@ -16,7 +16,7 @@ export async function serverGetData<T extends object | null>(
     const data = await fetchFn()
 
     if (isErrorResponse(data)) {
-      return c.json({ error: data.ErrMsg }, 500)
+      return c.json({ error: data.error }, 500)
     }
 
     return c.json(data)

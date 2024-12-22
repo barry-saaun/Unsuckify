@@ -17,13 +17,15 @@ export interface PlaylistCardProps {
   playlistName: string
   owner: string
   numberOfTracks: number
+  playlistId: string
 }
 
 const PlaylistCard = ({
   playlistImg,
   playlistName,
   owner,
-  numberOfTracks
+  numberOfTracks,
+  playlistId
 }: PlaylistCardProps) => {
   const router = useRouter()
   return (
@@ -51,8 +53,14 @@ const PlaylistCard = ({
         </p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full h-full mx-2" onClick={() => router.push("/")}>
-          <Link href="/" className="font-semibold">
+        <Button
+          className="w-full h-full mx-2"
+          onClick={() => router.push(`/api/playlists/${playlistId}/tracks`)}
+        >
+          <Link
+            href={`/api/playlists/${playlistId}/tracks`}
+            className="font-semibold"
+          >
             Unsuckify
           </Link>
         </Button>
