@@ -6,7 +6,7 @@ export function useSpotify<T>(serverEndpoint: string, staleTime?: number) {
   const { isAuthenticated } = useIsAuthenticated()
 
   const queryOptions: UseQueryOptions<T, Error> = {
-    queryKey: [serverEndpoint],
+    queryKey: [`/api/${serverEndpoint}`],
     enabled: isAuthenticated === true,
     // conditionally include staleTime
     ...(staleTime !== undefined && { staleTime }),
