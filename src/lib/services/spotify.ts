@@ -4,10 +4,7 @@ import type {
   PlaylistTrackResponse
 } from "spotify-api"
 import { cookies } from "next/headers"
-
-export type SpotifyFetchReturnType<T> = Promise<
-  T | { success: false; error: string }
->
+import { SpotifyFetchReturnType } from "@/types/index"
 
 export async function getAccessToken() {
   const cookiesStore = await cookies()

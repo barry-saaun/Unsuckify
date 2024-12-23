@@ -1,8 +1,5 @@
 import { Context } from "hono"
-
-type ErrorResponse = {
-  error: string
-}
+import { ErrorResponse } from "@/types/index"
 
 function isErrorResponse(data: unknown): data is ErrorResponse {
   return typeof data === "object" && data !== null && "error" in data
