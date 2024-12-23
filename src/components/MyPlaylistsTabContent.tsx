@@ -13,9 +13,6 @@ const MyPlaylistsTabContent = () => {
             <CardSkeleton key={idx} />
           ))
         : PlaylistMetadata.items.map((item) => {
-            console.log(
-              item.url ? item.url : "https://placehold.co/600x600?text=No+Image"
-            )
             return (
               <PlaylistCard
                 key={item.id}
