@@ -1,5 +1,5 @@
 import { Context } from "hono"
-import { SpotifyFetchReturnType } from "./spotify"
+import { SpotifyFetchReturnType } from "@/types/index"
 import { serverGetData } from "./serverGetData"
 
 async function getApiDataWithParam<T extends object | null>(
