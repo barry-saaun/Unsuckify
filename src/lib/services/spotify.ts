@@ -1,7 +1,8 @@
-import type {
-  CurrentUsersProfileResponse,
-  ListOfCurrentUsersPlaylistsResponse,
-  PlaylistTrackResponse
+import {
+  SinglePlaylistResponse,
+  type CurrentUsersProfileResponse,
+  type ListOfCurrentUsersPlaylistsResponse,
+  type PlaylistTrackResponse
 } from "spotify-api"
 import { cookies } from "next/headers"
 import { SpotifyFetchReturnType } from "@/types/index"
@@ -41,6 +42,8 @@ async function spotifyFetch<T>(
       }
     })
 
+    console.log(url)
+
     if (!res.ok) {
       console.error(`Error fetching data: ${res.statusText}`)
       return { success: false, error: `Error: ${res.status} ${res.statusText}` }
@@ -59,6 +62,10 @@ export const spotifyApi = {
     spotifyFetch<CurrentUsersProfileResponse>("/me"),
   getListOfCurrentUsersPlaylists: () =>
     spotifyFetch<ListOfCurrentUsersPlaylistsResponse>("/me/playlists"),
+  getSinglePlaylistResponse: (playlist_id: string) =>
+    spotifyFetch<SinglePlaylistResponse>("/playlists/{playlist_id}", {
+      playlist_id
+    }),
   getPlaylistTrack: (playlist_id: string) =>
     spotifyFetch<PlaylistTrackResponse>("/playlists/{playlist_id}/tracks", {
       playlist_id

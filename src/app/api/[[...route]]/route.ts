@@ -24,8 +24,8 @@ app.get("/me/playlists", (c) =>
   serverGetData(c, spotifyApi.getListOfCurrentUsersPlaylists)
 )
 
-app.get("/playlists/:playlist_id/tracks", (c) =>
-  getApiDataWithParam(c, spotifyApi.getPlaylistTrack, "playlist_id")
+app.get("/playlists/:playlist_id", (c) =>
+  getApiDataWithParam(c, spotifyApi.getSinglePlaylistResponse, "playlist_id")
 )
 
 app.post("/logout", logout)

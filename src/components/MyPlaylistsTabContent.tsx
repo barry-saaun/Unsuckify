@@ -1,10 +1,11 @@
-import useFetchPlaylistsMetadata from "@/hooks/useFetchPlaylistsMetadata"
+import useFetchUserPlaylistsMetadata from "@/hooks/useFetchUserPlaylistsMetadata"
 import PlaylistCard from "./PlaylistCard"
 import PlaylistImagePlaceholder from "../../public/playlist_image_placeholder.svg"
 import CardSkeleton from "./CardSkeleton"
 
 const MyPlaylistsTabContent = () => {
-  const { metadata: PlaylistMetadata, isLoading } = useFetchPlaylistsMetadata()
+  const { metadata: PlaylistMetadata, isLoading } =
+    useFetchUserPlaylistsMetadata()
   const numberOfSkeleton = 6
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

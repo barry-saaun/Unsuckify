@@ -4,6 +4,7 @@ declare module "spotify-api" {
   export type ListOfCurrentUsersPlaylistsResponse =
     SpotifyApi.ListOfCurrentUsersPlaylistsResponse
   export type PlaylistTrackResponse = SpotifyApi.PlaylistTrackResponse
+  export type SinglePlaylistResponse = SpotifyApi.SinglePlaylistResponse
 }
 
 declare module "tailwindcss/lib/util/flattenColorPalette" {
