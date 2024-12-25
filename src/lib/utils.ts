@@ -50,6 +50,41 @@ export function modifiedSinglePlaylistResponse(data: SinglePlaylistResponse) {
     }
   }
 
-  console.log(modifiedData)
   return modifiedData
+}
+
+export function setCodeGenRenderTime(dataLength: number): {
+  renderMsPerBatch: number
+  batchSize: number
+} {
+  let renderMsPerBatch: number = 0
+  let batchSize: number = 0
+
+  switch (true) {
+    default:
+      renderMsPerBatch = 1
+      batchSize = 10
+      break
+
+    case dataLength <= 10:
+      renderMsPerBatch = 10
+      batchSize = 2
+      break
+
+    case dataLength > 10 && dataLength <= 25:
+      renderMsPerBatch = 0.5
+      batchSize = 20
+      break
+
+    case dataLength > 25 && dataLength <= 40:
+      renderMsPerBatch = 1
+      batchSize = 40
+      break
+
+    case dataLength > 40:
+      renderMsPerBatch = 1
+      batchSize = 50
+      break
+  }
+  return { renderMsPerBatch, batchSize }
 }

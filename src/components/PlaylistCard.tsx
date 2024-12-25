@@ -55,12 +55,9 @@ const PlaylistCard = ({
       <CardFooter>
         <Button
           className="w-full h-full mx-2"
-          onClick={() => router.push(`/api/playlists/${playlistId}/tracks`)}
+          onClick={() => router.push(`dashboard/${playlistId}`)}
         >
-          <Link
-            href={`/api/playlists/${playlistId}/tracks`}
-            className="font-semibold"
-          >
+          <Link href={`dashboard/${playlistId}`} className="font-semibold">
             Unsuckify
           </Link>
         </Button>

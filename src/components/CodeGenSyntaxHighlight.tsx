@@ -1,46 +1,62 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { nightOwl } from "react-syntax-highlighter/dist/esm/styles/prism"
 
-type CodeGenerationProps = {
+export type CodeGenerationProps = {
   fullCode: string
-  renderMsPerword?: number
+  renderMsPerBatch: number
+  batchSize: number
 }
 
 const CodeGenerationEffect = ({
   fullCode,
-  renderMsPerword = 5
+  renderMsPerBatch,
+  batchSize
 }: CodeGenerationProps) => {
   const [code, setCode] = useState("")
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let index = 0
     const interval = setInterval(() => {
-      setCode((prev) => prev + fullCode[index])
-      index++
+      setCode((prev) => prev + fullCode.slice(index, index + batchSize))
+      index += batchSize
       if (index >= fullCode.length) {
         clearInterval(interval)
       }
-    }, renderMsPerword)
+
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight
+      }
+    }, renderMsPerBatch)
     return () => clearInterval(interval)
-  }, [fullCode, renderMsPerword])
+  }, [fullCode, renderMsPerBatch, batchSize])
 
   return (
-    <SyntaxHighlighter
-      language="json"
-      style={nightOwl}
-      wrapLines
-      wrapLongLines
-      showLineNumbers
-      lineProps={{
-        style: {
-          flexWrap: "wrap"
-        }
+    <div
+      ref={containerRef}
+      style={{
+        maxHeight: "400px", // Define scrollable height
+        overflowY: "auto", // Enable vertical scrolling
+        borderRadius: "2px"
       }}
     >
-      {code}
-    </SyntaxHighlighter>
+      <SyntaxHighlighter
+        language="json"
+        style={nightOwl}
+        wrapLines
+        wrapLongLines
+        showLineNumbers
+        lineProps={{
+          style: {
+            flexWrap: "wrap"
+          }
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
+    </div>
   )
 }
 
