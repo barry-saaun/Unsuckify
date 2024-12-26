@@ -5,6 +5,7 @@ import { match } from "path-to-regexp"
 const publicRoutes = ["/api/login", "/api/callback", "/login"]
 const protectedRoutes = [
   "/dashboard",
+  "/dashboard/:playlist_id",
   "/api/me",
   "/api/me/playlist",
   "/api/playlists/:playlist_id/tracks"
