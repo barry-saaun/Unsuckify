@@ -14,12 +14,13 @@ import { Input } from "./ui/input"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { Bounce, toast, ToastContainer } from "react-toastify"
 
 const FormSchema = z.object({
   url: z
     .string()
     .regex(
-      /^https:\/\/open\.spotify\.com\/playlist\/[a-zA-Z0-9]+(\?si=[a-zA-Z0-9]+)?$/,
+      /^https:\/\/open\.spotify\.com\/playlist\/[a-zA-Z0-9]+(\?si=[a-zA-Z0-9]+)?$|^https:\/\/open\.spotify\.com\/playlist\/[a-zA-Z0-9]+$/,
       { message: "Invalid Spotify Playlist URL." }
     )
 })
@@ -35,7 +36,6 @@ function PulbicPlaylistTabContent() {
   })
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    // console.log(JSON.stringify(data))
     const playlistUrlObject = FormSchema.safeParse(data)
 
     const playlistUrl = playlistUrlObject.data?.url
@@ -46,7 +46,15 @@ function PulbicPlaylistTabContent() {
 
   const errorOnSubmit = (errors: FieldErrors<z.infer<typeof FormSchema>>) => {
     const errorMessage = errors?.url
-    console.log(errorMessage)
+    if (errorMessage) {
+      toast.error(` 😩 ${errorMessage.message}`, {
+        position: "top-center",
+        theme: "colored",
+        closeOnClick: true,
+        transition: Bounce,
+        autoClose: 2000
+      })
+    }
   }
 
   return (
@@ -91,6 +99,7 @@ function PulbicPlaylistTabContent() {
           </Form>
         </CardContent>
       </Card>
+      <ToastContainer />
     </div>
   )
 }
