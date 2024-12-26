@@ -15,6 +15,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { Bounce, toast, ToastContainer } from "react-toastify"
+import { useEffect, useState } from "react"
 
 const FormSchema = z.object({
   url: z
@@ -27,6 +28,7 @@ const FormSchema = z.object({
 
 function PulbicPlaylistTabContent() {
   const router = useRouter()
+  const [toastWidth, setToastWidth] = useState<string>("300px")
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -56,6 +58,26 @@ function PulbicPlaylistTabContent() {
       })
     }
   }
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const windowWith = window.innerWidth
+      if (windowWith < 640) {
+        setToastWidth("300px")
+      } else if (windowWith >= 640 && windowWith < 768) {
+        setToastWidth("300px")
+      } else if (windowWith >= 768 && windowWith < 1024) {
+        setToastWidth("325px")
+      } else if (windowWith >= 1024) {
+        setToastWidth("375px")
+      }
+    }
+
+    window.addEventListener("resize", updateWidth)
+    updateWidth()
+
+    return window.removeEventListener("resize", updateWidth)
+  }, [])
 
   return (
     <div className="container flex flex-grow justify-center md:justify-start items-center w-full md:w-2/3  rounded-lg  ">
@@ -99,7 +121,7 @@ function PulbicPlaylistTabContent() {
           </Form>
         </CardContent>
       </Card>
-      <ToastContainer />
+      <ToastContainer toastStyle={{ width: toastWidth }} />
     </div>
   )
 }
