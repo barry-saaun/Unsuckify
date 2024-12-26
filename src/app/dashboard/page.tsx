@@ -1,6 +1,7 @@
 "use client"
 
 import MyPlaylistsTabContent from "@/components/MyPlaylistsTabContent"
+import PublicPlaylistTabContent from "@/components/PublicPlaylistTabContent"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function DashboardPage() {
@@ -21,6 +22,9 @@ export default function DashboardPage() {
           </TabsList>
           <TabsContent value="my-playlists">
             <MyPlaylistsTabContent />
+          </TabsContent>
+          <TabsContent value="public-playlist">
+            <PublicPlaylistTabContent />
           </TabsContent>
         </Tabs>
       </div>
