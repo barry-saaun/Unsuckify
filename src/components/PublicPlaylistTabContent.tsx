@@ -1,3 +1,4 @@
+"use client"
 import { FieldErrors, useForm } from "react-hook-form"
 
 import { Button } from "./ui/button"
@@ -12,9 +13,7 @@ import { Form, FormControl, FormField, FormItem } from "./ui/form"
 import { Input } from "./ui/input"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-
-const URL_TEST =
-  "https://open.spotify.com/playlist/2RpyZcgBtgNTQ7WCvsjDIM?si=ede6a1b8df3c4b87"
+import { useRouter } from "next/navigation"
 
 const FormSchema = z.object({
   url: z
@@ -26,6 +25,8 @@ const FormSchema = z.object({
 })
 
 function PulbicPlaylistTabContent() {
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -36,7 +37,11 @@ function PulbicPlaylistTabContent() {
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // console.log(JSON.stringify(data))
     const playlistUrlObject = FormSchema.safeParse(data)
-    console.log(playlistUrlObject)
+
+    const playlistUrl = playlistUrlObject.data?.url
+    const playlist_id = playlistUrl?.split("?si")[0].split("playlist/")[1]
+    console.log(playlist_id)
+    router.push(`/dashboard/${playlist_id}`)
   }
 
   const errorOnSubmit = (errors: FieldErrors<z.infer<typeof FormSchema>>) => {
