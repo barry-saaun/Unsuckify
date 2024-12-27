@@ -5,9 +5,9 @@ import axios from "axios"
 
 import { cookies } from "next/headers"
 
-const CLIENT_ID = process.env.CLIENT_ID || ""
-const CLIENT_SECRET = process.env.CLIENT_SECRET || ""
-const REDIRECT_URI = process.env.REDIRECT_URI || ""
+const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID || ""
+const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET || ""
+const NEXT_PUBLIC_REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI || ""
 
 export function getAuthEndpointUrl(c: Context) {
   try {
@@ -19,9 +19,9 @@ export function getAuthEndpointUrl(c: Context) {
     const baseUrl = "https://accounts.spotify.com/authorize"
     const params = {
       response_type: "code",
-      client_id: CLIENT_ID,
+      client_id: SPOTIFY_CLIENT_ID,
       scope,
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: NEXT_PUBLIC_REDIRECT_URI,
       state
     }
 
@@ -49,9 +49,9 @@ export async function getOAuthCode(c: Context) {
   try {
     const tokenEndpoint = "https://accounts.spotify.com/api/token"
     // const credentials = `${CLIENT_ID}:${CLIENT_SECRET}`
-    const credentials = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
-      "base64"
-    )
+    const credentials = Buffer.from(
+      `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+    ).toString("base64")
 
     const { data } = await axios({
       url: tokenEndpoint,
@@ -62,7 +62,7 @@ export async function getOAuthCode(c: Context) {
       },
       params: {
         code,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: NEXT_PUBLIC_REDIRECT_URI,
         grant_type: "authorization_code"
       }
     })
