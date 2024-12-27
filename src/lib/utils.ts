@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { SinglePlaylistResponse } from "spotify-api"
 import { twMerge } from "tailwind-merge"
+import { ModifiedDataType } from "../types/index"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -24,8 +25,10 @@ export function getInitials(name: string) {
   return initials
 }
 
-export function modifiedSinglePlaylistResponse(data: SinglePlaylistResponse) {
-  let modifiedData: Record<string, string | undefined>[] = []
+export function modifiedSinglePlaylistResponse(
+  data: SinglePlaylistResponse
+): ModifiedDataType {
+  let modifiedData: ModifiedDataType = []
 
   if (data && data.tracks && data.tracks.items.length > 0) {
     const items = data.tracks.items
@@ -87,4 +90,21 @@ export function setCodeGenRenderTime(dataLength: number): {
       break
   }
   return { renderMsPerBatch, batchSize }
+}
+
+export function convertModifiedDataToString(
+  modifiedData: ModifiedDataType
+): string[] {
+  let TracksStringArray: string[] = []
+  let idx = 1
+
+  for (const data of modifiedData) {
+    TracksStringArray = [
+      ...TracksStringArray,
+      `${idx}. ${data.artists} - ${data.track} - ${data.album} `
+    ]
+    idx++
+  }
+
+  return TracksStringArray
 }

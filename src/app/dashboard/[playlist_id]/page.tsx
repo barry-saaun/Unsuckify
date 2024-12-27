@@ -1,5 +1,6 @@
 "use client"
 import PlaylistJsonDataScroll from "@/components/PlaylistJsonDataScroll"
+import RecommendationDashboardTab from "@/components/RecommendationDashboardTab"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ToastBreakpointValues } from "@/constants/dynamicBreakpointValues"
@@ -9,8 +10,9 @@ import {
   modifiedSinglePlaylistResponse,
   setCodeGenRenderTime
 } from "@/lib/utils"
-import { CheckCircle2, Loader2 } from "lucide-react"
-import { useParams } from "next/navigation"
+import { ModifiedDataType } from "@/types/index"
+import { CheckCircle2, ChevronLeft, Loader2 } from "lucide-react"
+import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import { Bounce, toast, ToastContainer } from "react-toastify"
 import { SinglePlaylistResponse } from "spotify-api"
@@ -23,6 +25,8 @@ const PlaylistContentDashboard = () => {
     60 * 1000
   )
 
+  const router = useRouter()
+
   const [isCopied, setIsCopied] = useState<boolean>(false)
   const { value: toastWidth } = useDynamicBreakpointValue(ToastBreakpointValues)
 
@@ -34,7 +38,7 @@ const PlaylistContentDashboard = () => {
     )
   }
 
-  let modifiedData: Record<string, string | undefined>[] = []
+  let modifiedData: ModifiedDataType = []
 
   let renderMsPerBatch: number = 0
   let batchSize: number = 0
@@ -68,6 +72,14 @@ const PlaylistContentDashboard = () => {
 
   return (
     <div className="container  mx-auto py-10">
+      <Button
+        className="mb-5 flex mx-2"
+        variant="secondary"
+        onClick={() => router.push("/dashboard")}
+      >
+        <ChevronLeft />
+        <span className="font-bold">Back to Dashboard</span>
+      </Button>
       <h1 className="text-4xl font-bold mb-8 px-3 md:px-0">{data?.name}</h1>
       <Tabs defaultValue="json">
         <TabsList className="space-x-3">
@@ -95,6 +107,9 @@ const PlaylistContentDashboard = () => {
               </Button>
             }
           />
+        </TabsContent>
+        <TabsContent value="recommendation">
+          <RecommendationDashboardTab modifiedData={modifiedData} />
         </TabsContent>
       </Tabs>
       <ToastContainer
