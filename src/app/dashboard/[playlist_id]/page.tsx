@@ -50,7 +50,7 @@ const PlaylistContentDashboard = () => {
   }
 
   const playlistJson = JSON.stringify(modifiedData, null, 2)
-  const predefinedPrompt = `Given the following JSON object that has artists' name, album's name, and the track name fileds: \n \n ${playlistJson} \n\n Recommend some songs (up to 10) that match the vibe, genre, or emotional tone of these tracks. The recommendations should not be limited to the same artists but should focus on similar musical styles, themes, or atmospheres.`
+  const predefinedPrompt = `Given the following JSON object with the artists' names, album names, and track names: \n\n ${playlistJson} \n\n Recommend some songs (up to 10) that match the vibe, genre, or emotional tone of these tracks. The recommendations should not be limited to the same artists but should focus on similar musical styles, themes, or atmospheres.`
 
   const handleCopy = () => {
     window.focus()
