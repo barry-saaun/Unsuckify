@@ -16,5 +16,5 @@ export const CodeBlockBreakpointValues = {
   default: ".7em",
   sm: ".7em",
   md: "1em",
-  lg: "1.2em"
+  lg: "1em"
 }

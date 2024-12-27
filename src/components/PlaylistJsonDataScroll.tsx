@@ -9,12 +9,18 @@ import {
 import CodeGenerationEffect, {
   CodeGenerationProps
 } from "./CodeGenSyntaxHighlight"
+import { Fragment } from "react"
+
+type PlaylistJsonDataScrollProps = CodeGenerationProps & {
+  customButton?: React.ReactNode
+}
 
 const PlaylistJsonDataScroll = ({
   fullCode,
   renderMsPerBatch,
-  batchSize
-}: CodeGenerationProps) => {
+  batchSize,
+  customButton
+}: PlaylistJsonDataScrollProps) => {
   return (
     <Card>
       <CardHeader>
@@ -26,7 +32,7 @@ const PlaylistJsonDataScroll = ({
           needed.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col justify-center items-start space-y-5">
         <ScrollArea
           className="h-[400px] w-full rounded-md border p-4"
           style={{
@@ -42,6 +48,7 @@ const PlaylistJsonDataScroll = ({
             />
           </div>
         </ScrollArea>
+        {customButton && <Fragment>{customButton}</Fragment>}
       </CardContent>
     </Card>
   )

@@ -1,13 +1,18 @@
 "use client"
 import PlaylistJsonDataScroll from "@/components/PlaylistJsonDataScroll"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ToastBreakpointValues } from "@/constants/dynamicBreakpointValues"
+import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import { useSpotify } from "@/hooks/useSpotify"
 import {
   modifiedSinglePlaylistResponse,
   setCodeGenRenderTime
 } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
+import { CheckCircle2, Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
+import { useState } from "react"
+import { Bounce, toast, ToastContainer } from "react-toastify"
 import { SinglePlaylistResponse } from "spotify-api"
 
 const PlaylistContentDashboard = () => {
@@ -17,6 +22,9 @@ const PlaylistContentDashboard = () => {
     `/playlists/${playlist_id}`,
     60 * 1000
   )
+
+  const [isCopied, setIsCopied] = useState<boolean>(false)
+  const { value: toastWidth } = useDynamicBreakpointValue(ToastBreakpointValues)
 
   if (isLoading) {
     return (
@@ -41,6 +49,23 @@ const PlaylistContentDashboard = () => {
     batchSize = timeConfig.batchSize
   }
 
+  const playlistJson = JSON.stringify(modifiedData, null, 2)
+  const predefinedPrompt = `Given the following JSON object that has artists' name, album's name, and the track name fileds: \n \n ${playlistJson} \n\n Recommend some songs (up to 10) that match the vibe, genre, or emotional tone of these tracks. The recommendations should not be limited to the same artists but should focus on similar musical styles, themes, or atmospheres.`
+
+  const handleCopy = () => {
+    window.focus()
+    navigator.clipboard.writeText(predefinedPrompt)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 2000)
+    toast.success("🎉 Copied!", {
+      position: "top-center",
+      theme: "colored",
+      closeOnClick: true,
+      transition: Bounce,
+      autoClose: 1200
+    })
+  }
+
   return (
     <div className="container  mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8 px-3 md:px-0">{data?.name}</h1>
@@ -55,12 +80,28 @@ const PlaylistContentDashboard = () => {
         </TabsList>
         <TabsContent value="json">
           <PlaylistJsonDataScroll
-            fullCode={JSON.stringify(modifiedData, null, 2)}
+            fullCode={playlistJson}
             renderMsPerBatch={renderMsPerBatch}
             batchSize={batchSize}
+            customButton={
+              <Button onClick={handleCopy} className="font-bold h-10 w-28 ">
+                {isCopied ? (
+                  <div className=" h-8 w-8 flex justify-center items-center animate-check">
+                    <CheckCircle2 />
+                  </div>
+                ) : (
+                  <div>Copy JSON</div>
+                )}
+              </Button>
+            }
           />
         </TabsContent>
       </Tabs>
+      <ToastContainer
+        toastStyle={{
+          width: toastWidth
+        }}
+      />
     </div>
   )
 }
