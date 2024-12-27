@@ -1,4 +1,6 @@
 "use client"
+import { CodeBlockBreakpointValues } from "@/constants/dynamicBreakpointValues"
+import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import React, { useState, useEffect, useRef } from "react"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { nightOwl } from "react-syntax-highlighter/dist/esm/styles/prism"
@@ -15,6 +17,9 @@ const CodeGenerationEffect = ({
   batchSize
 }: CodeGenerationProps) => {
   const [code, setCode] = useState("")
+  const { value: codeFontSize } = useDynamicBreakpointValue(
+    CodeBlockBreakpointValues
+  )
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -50,7 +55,8 @@ const CodeGenerationEffect = ({
         showLineNumbers
         lineProps={{
           style: {
-            flexWrap: "wrap"
+            flexWrap: "wrap",
+            fontSize: codeFontSize
           }
         }}
       >
