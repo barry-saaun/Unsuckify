@@ -19,8 +19,8 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center">
-      <Button onClick={handleGoBack} className="absolute top-10 left-10 flex ">
+    <div className="min-h-[90vh] w-full flex flex-col items-center justify-center ">
+      <Button onClick={handleGoBack} className="absolute top-20 left-10 flex ">
         <ChevronLeft />
         <span className="font-medium">Back</span>
       </Button>
