@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ToastBreakpointValues } from "@/constants/dynamicBreakpointValues"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
+import { usePlaylistData } from "@/hooks/usePlaylistData"
 import { useSpotify } from "@/hooks/useSpotify"
 import {
-  modifiedPlaylistTrackResponse,
-  modifiedSinglePlaylistResponse,
+  modifiedDataAllTracksPlaylistTrackResponse,
   setCodeGenRenderTime
 } from "@/lib/utils"
 import { ModifiedDataType } from "@/types/index"
@@ -16,7 +16,7 @@ import { CheckCircle2, ChevronLeft, Loader2 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import { Bounce, toast, ToastContainer } from "react-toastify"
-import { PlaylistTrackResponse, SinglePlaylistResponse } from "spotify-api"
+import { SinglePlaylistResponse } from "spotify-api"
 
 const PlaylistContentDashboard = () => {
   const { playlist_id } = useParams<{ playlist_id: string }>()
@@ -26,9 +26,7 @@ const PlaylistContentDashboard = () => {
     60 * 1000
   )
 
-  const { data, isLoading } = useSpotify<PlaylistTrackResponse>(
-    `/playlists/${playlist_id}/tracks`
-  )
+  const { data, isLoading } = usePlaylistData(playlist_id)
 
   const router = useRouter()
 
@@ -49,7 +47,7 @@ const PlaylistContentDashboard = () => {
   let batchSize: number = 0
 
   if (data) {
-    modifiedData = modifiedPlaylistTrackResponse(data)
+    modifiedData = modifiedDataAllTracksPlaylistTrackResponse(data)
 
     const dataLength = modifiedData.length
     const timeConfig = setCodeGenRenderTime(dataLength)

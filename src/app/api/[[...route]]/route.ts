@@ -31,10 +31,6 @@ app.get("/playlists/:playlist_id", (c) =>
 )
 
 app.get("/playlists/:playlist_id/tracks", (c) =>
-  getApiDataWithParam(c, spotifyApi.getPlaylistTrack, "playlist_id")
-)
-
-app.get("/test-query/:playlist_id", (c) =>
   getApiDataWithParamAndQuery(
     c,
     (playlist_id, queryKeysValues) =>

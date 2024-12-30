@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
-import { PlaylistTrackResponse, SinglePlaylistResponse } from "spotify-api"
+import { TrackObjectFull } from "spotify-api"
 import { twMerge } from "tailwind-merge"
 import { ModifiedDataType } from "../types/index"
 
@@ -25,21 +25,16 @@ export function getInitials(name: string) {
   return initials
 }
 
-export function modifiedSinglePlaylistResponse(
-  data: SinglePlaylistResponse
+export function modifiedDataAllTracksPlaylistTrackResponse(
+  data: (TrackObjectFull | null)[]
 ): ModifiedDataType {
   let modifiedData: ModifiedDataType = []
 
-  if (data && data.tracks && data.tracks.items.length > 0) {
-    const items = data.tracks.items
-    for (const item of items) {
-      const track = item.track
-
-      const artistsList = track?.artists
+  if (data && data.length > 0) {
+    for (const track of data) {
       let artists = ""
-
-      if (artistsList && artistsList.length > 0) {
-        artists = artistsList.map((artist) => artist.name).join(", ")
+      if (track && track.artists && track.artists.length > 0) {
+        artists = track.artists.map((artist) => artist.name).join(", ")
       }
 
       modifiedData = [
@@ -52,33 +47,7 @@ export function modifiedSinglePlaylistResponse(
       ]
     }
   }
-
-  return modifiedData
-}
-
-export function modifiedPlaylistTrackResponse(
-  data: PlaylistTrackResponse
-): ModifiedDataType {
-  let modifiedData: ModifiedDataType = []
-
-  if (data && data.items.length > 0) {
-    const items = data.items
-    for (const item of items) {
-      let artists = ""
-      if (item.track?.artists && item.track?.artists.length > 0) {
-        artists = item.track.artists.map((artist) => artist.name).join(", ")
-      }
-
-      modifiedData = [
-        ...modifiedData,
-        {
-          artists,
-          album: item.track?.album.name,
-          track: item.track?.name
-        }
-      ]
-    }
-  }
+  console.log(modifiedData.length)
 
   return modifiedData
 }
@@ -115,6 +84,11 @@ export function setCodeGenRenderTime(dataLength: number): {
       renderMsPerBatch = 1
       batchSize = 50
       break
+
+    case dataLength > 200:
+      renderMsPerBatch = 0.25
+      batchSize = 500
+      break
   }
   return { renderMsPerBatch, batchSize }
 }
@@ -123,15 +97,71 @@ export function convertModifiedDataToString(
   modifiedData: ModifiedDataType
 ): string[] {
   let TracksStringArray: string[] = []
-  let idx = 1
 
   for (const data of modifiedData) {
     TracksStringArray = [
       ...TracksStringArray,
-      `${idx}. ${data.artists} - ${data.track} - ${data.album} `
+      `${data.artists}-${data.track}-${data.album} `
     ]
-    idx++
   }
 
   return TracksStringArray
 }
+
+// export function modifiedSinglePlaylistResponse(
+//   data: SinglePlaylistResponse
+// ): ModifiedDataType {
+//   let modifiedData: ModifiedDataType = []
+//
+//   if (data && data.tracks && data.tracks.items.length > 0) {
+//     const items = data.tracks.items
+//     for (const item of items) {
+//       const track = item.track
+//
+//       const artistsList = track?.artists
+//       let artists = ""
+//
+//       if (artistsList && artistsList.length > 0) {
+//         artists = artistsList.map((artist) => artist.name).join(", ")
+//       }
+//
+//       modifiedData = [
+//         ...modifiedData,
+//         {
+//           artists,
+//           album: track?.album.name,
+//           track: track?.name
+//         }
+//       ]
+//     }
+//   }
+//
+//   return modifiedData
+// }
+//
+// export function modifiedPlaylistTrackResponse(
+//   data: PlaylistTrackResponse
+// ): ModifiedDataType {
+//   let modifiedData: ModifiedDataType = []
+//
+//   if (data && data.items.length > 0) {
+//     const items = data.items
+//     for (const item of items) {
+//       let artists = ""
+//       if (item.track?.artists && item.track?.artists.length > 0) {
+//         artists = item.track.artists.map((artist) => artist.name).join(", ")
+//       }
+//
+//       modifiedData = [
+//         ...modifiedData,
+//         {
+//           artists,
+//           album: item.track?.album.name,
+//           track: item.track?.name
+//         }
+//       ]
+//     }
+//   }
+//
+//   return modifiedData
+// }
