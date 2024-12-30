@@ -5,7 +5,8 @@ import {
   type PlaylistTrackResponse
 } from "spotify-api"
 import { cookies } from "next/headers"
-import { SpotifyFetchReturnType } from "@/types/index"
+import { OffsetLimitParams, SpotifyFetchReturnType } from "@/types/index"
+import queryString from "query-string"
 
 export async function getAccessToken() {
   const cookiesStore = await cookies()
@@ -14,7 +15,8 @@ export async function getAccessToken() {
 
 async function spotifyFetch<T>(
   endpoint: string,
-  params?: Record<string, string>
+  params?: Record<string, string>,
+  queryParams?: Record<string, number | string>
 ): SpotifyFetchReturnType<T> {
   try {
     const access_token = await getAccessToken()
@@ -32,7 +34,11 @@ async function spotifyFetch<T>(
         )
       : endpoint
 
-    const url = `${baseUrl}${resolvedEndpoint}`
+    const queryParamsString = queryParams
+      ? queryString.stringify(queryParams)
+      : null
+
+    const url = `${baseUrl}${resolvedEndpoint}?${queryParamsString}`
 
     const res = await fetch(url, {
       method: "GET",
@@ -69,5 +75,14 @@ export const spotifyApi = {
   getPlaylistTrack: (playlist_id: string) =>
     spotifyFetch<PlaylistTrackResponse>("/playlists/{playlist_id}/tracks", {
       playlist_id
-    })
+    }),
+
+  testingQueryParam: (playlist_id: string, queryParams: OffsetLimitParams) =>
+    spotifyFetch<PlaylistTrackResponse>(
+      "/playlists/{playlist_id}/tracks",
+      {
+        playlist_id
+      },
+      queryParams
+    )
 }

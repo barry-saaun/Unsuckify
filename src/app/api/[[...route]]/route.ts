@@ -1,8 +1,10 @@
 import { getAuthEndpointUrl, getOAuthCode } from "@/lib/auth/getAuthCode"
 import { logout } from "@/lib/auth/utils"
 import getApiDataWithParam from "@/lib/services/getApiDataWithParam"
+import getApiDataWithParamAndQuery from "@/lib/services/getApiDataWithParamAndQuery"
 import { serverGetData } from "@/lib/services/serverGetData"
 import { spotifyApi } from "@/lib/services/spotify"
+import { OffsetLimitParams } from "@/types/index"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
 
@@ -11,7 +13,7 @@ export const runtime = "edge"
 const app = new Hono().basePath("/api")
 
 app.get("/search", (c) => {
-  return c.json({ msg: "hello world" })
+  return c.json({ msg: "Hello Hono" })
 })
 
 app.get("/login", getAuthEndpointUrl)
@@ -30,6 +32,19 @@ app.get("/playlists/:playlist_id", (c) =>
 
 app.get("/playlists/:playlist_id/tracks", (c) =>
   getApiDataWithParam(c, spotifyApi.getPlaylistTrack, "playlist_id")
+)
+
+app.get("/test-query/:playlist_id", (c) =>
+  getApiDataWithParamAndQuery(
+    c,
+    (playlist_id, queryKeysValues) =>
+      spotifyApi.testingQueryParam(
+        playlist_id,
+        queryKeysValues as OffsetLimitParams
+      ),
+    "playlist_id",
+    ["offset", "limit"]
+  )
 )
 
 app.post("/logout", logout)
