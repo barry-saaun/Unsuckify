@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
-import { SinglePlaylistResponse } from "spotify-api"
+import { PlaylistTrackResponse, SinglePlaylistResponse } from "spotify-api"
 import { twMerge } from "tailwind-merge"
 import { ModifiedDataType } from "../types/index"
 
@@ -48,6 +48,33 @@ export function modifiedSinglePlaylistResponse(
           artists,
           album: track?.album.name,
           track: track?.name
+        }
+      ]
+    }
+  }
+
+  return modifiedData
+}
+
+export function modifiedPlaylistTrackResponse(
+  data: PlaylistTrackResponse
+): ModifiedDataType {
+  let modifiedData: ModifiedDataType = []
+
+  if (data && data.items.length > 0) {
+    const items = data.items
+    for (const item of items) {
+      let artists = ""
+      if (item.track?.artists && item.track?.artists.length > 0) {
+        artists = item.track.artists.map((artist) => artist.name).join(", ")
+      }
+
+      modifiedData = [
+        ...modifiedData,
+        {
+          artists,
+          album: item.track?.album.name,
+          track: item.track?.name
         }
       ]
     }

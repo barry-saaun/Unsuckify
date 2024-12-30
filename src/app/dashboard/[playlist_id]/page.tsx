@@ -7,6 +7,7 @@ import { ToastBreakpointValues } from "@/constants/dynamicBreakpointValues"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import { useSpotify } from "@/hooks/useSpotify"
 import {
+  modifiedPlaylistTrackResponse,
   modifiedSinglePlaylistResponse,
   setCodeGenRenderTime
 } from "@/lib/utils"
@@ -15,14 +16,18 @@ import { CheckCircle2, ChevronLeft, Loader2 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import { Bounce, toast, ToastContainer } from "react-toastify"
-import { SinglePlaylistResponse } from "spotify-api"
+import { PlaylistTrackResponse, SinglePlaylistResponse } from "spotify-api"
 
 const PlaylistContentDashboard = () => {
   const { playlist_id } = useParams<{ playlist_id: string }>()
 
-  const { data, isLoading } = useSpotify<SinglePlaylistResponse>(
+  const { data: playlist_data } = useSpotify<SinglePlaylistResponse>(
     `/playlists/${playlist_id}`,
     60 * 1000
+  )
+
+  const { data, isLoading } = useSpotify<PlaylistTrackResponse>(
+    `/playlists/${playlist_id}/tracks`
   )
 
   const router = useRouter()
@@ -44,7 +49,7 @@ const PlaylistContentDashboard = () => {
   let batchSize: number = 0
 
   if (data) {
-    modifiedData = modifiedSinglePlaylistResponse(data)
+    modifiedData = modifiedPlaylistTrackResponse(data)
 
     const dataLength = modifiedData.length
     const timeConfig = setCodeGenRenderTime(dataLength)
@@ -80,7 +85,9 @@ const PlaylistContentDashboard = () => {
         <ChevronLeft />
         <span className="font-bold">Back to Dashboard</span>
       </Button>
-      <h1 className="text-4xl font-bold mb-8 px-3 md:px-0">{data?.name}</h1>
+      <h1 className="text-4xl font-bold mb-8 px-3 md:px-0">
+        {playlist_data?.name}
+      </h1>
       <Tabs defaultValue="json">
         <TabsList className="space-x-3">
           <TabsTrigger value="recommendation" className="font-bold">

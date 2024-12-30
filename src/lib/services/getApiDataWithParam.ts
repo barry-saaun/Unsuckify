@@ -4,7 +4,7 @@ import { serverGetData } from "./serverGetData"
 
 async function getApiDataWithParam<T extends object | null>(
   c: Context,
-  fetchFn: (param: string) => SpotifyFetchReturnType<T>,
+  fetchFn: (paramName: string) => SpotifyFetchReturnType<T>,
   paramName: string
 ) {
   return serverGetData(c, async () => {
