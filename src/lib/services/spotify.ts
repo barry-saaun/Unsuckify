@@ -35,10 +35,10 @@ async function spotifyFetch<T>(
       : endpoint
 
     const queryParamsString = queryParams
-      ? queryString.stringify(queryParams)
-      : null
+      ? `?${queryString.stringify(queryParams)}`
+      : ""
 
-    const url = `${baseUrl}${resolvedEndpoint}?${queryParamsString}`
+    const url = `${baseUrl}${resolvedEndpoint}${queryParamsString}`
 
     const res = await fetch(url, {
       method: "GET",
@@ -47,8 +47,6 @@ async function spotifyFetch<T>(
         "Content-Type": "application/json"
       }
     })
-
-    console.log(url)
 
     if (!res.ok) {
       console.error(`Error fetching data: ${res.statusText}`)

@@ -44,7 +44,7 @@ async function fetchTracks(playlist_id: string) {
 export function usePlaylistData(playlist_id: string) {
   const { isAuthenticated } = useIsAuthenticated()
   return useQuery({
-    queryKey: ["tracks"],
+    queryKey: ["tracks", playlist_id],
     queryFn: () => fetchTracks(playlist_id),
     enabled: isAuthenticated === true
   })

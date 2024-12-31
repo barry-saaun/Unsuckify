@@ -21,10 +21,8 @@ import { SinglePlaylistResponse } from "spotify-api"
 const PlaylistContentDashboard = () => {
   const { playlist_id } = useParams<{ playlist_id: string }>()
 
-  const { data: playlist_data } = useSpotify<SinglePlaylistResponse>(
-    `/playlists/${playlist_id}`,
-    60 * 1000
-  )
+  const { data: playlist_data, isLoading: playlistLoading } =
+    useSpotify<SinglePlaylistResponse>(`/playlists/${playlist_id}`, 60 * 1000)
 
   const { data, isLoading } = usePlaylistData(playlist_id)
 
@@ -33,7 +31,7 @@ const PlaylistContentDashboard = () => {
   const [isCopied, setIsCopied] = useState<boolean>(false)
   const { value: toastWidth } = useDynamicBreakpointValue(ToastBreakpointValues)
 
-  if (isLoading) {
+  if (isLoading && playlistLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -76,11 +74,11 @@ const PlaylistContentDashboard = () => {
   return (
     <div className="container  mx-auto py-10">
       <Button
-        className="mb-5 flex mx-2"
+        className="mb-5 flex mx-2 group"
         variant="secondary"
         onClick={() => router.push("/dashboard")}
       >
-        <ChevronLeft />
+        <ChevronLeft className="group-hover:-translate-x-[0.35rem] transition-transform duration-200" />
         <span className="font-bold">Back to Dashboard</span>
       </Button>
       <h1 className="text-4xl font-bold mb-8 px-3 md:px-0">
