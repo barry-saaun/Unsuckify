@@ -1,5 +1,6 @@
 import { getAuthEndpointUrl, getOAuthCode } from "@/lib/auth/getAuthCode"
 import { logout } from "@/lib/auth/utils"
+import { Recommendations } from "@/lib/services/gemini"
 import getApiDataWithParam from "@/lib/services/getApiDataWithParam"
 import getApiDataWithParamAndQuery from "@/lib/services/getApiDataWithParamAndQuery"
 import { serverGetData } from "@/lib/services/serverGetData"
@@ -42,6 +43,8 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
     ["offset", "limit"]
   )
 )
+
+app.get("/recommendations", (c) => Recommendations(c))
 
 app.post("/logout", logout)
 
