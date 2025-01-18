@@ -1,6 +1,6 @@
 import { getAuthEndpointUrl, getOAuthCode } from "@/lib/auth/getAuthCode"
 import { logout } from "@/lib/auth/utils"
-import { Recommendations } from "@/lib/services/gemini"
+import { TrackDescriptorSummary } from "@/lib/services/gemini"
 import getApiDataWithParam from "@/lib/services/getApiDataWithParam"
 import getApiDataWithParamAndQuery from "@/lib/services/getApiDataWithParamAndQuery"
 import { serverGetData } from "@/lib/services/serverGetData"
@@ -35,7 +35,7 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
   getApiDataWithParamAndQuery(
     c,
     (playlist_id, queryKeysValues) =>
-      spotifyApi.testingQueryParam(
+      spotifyApi.getPlaylistTrackWithQueryParams(
         playlist_id,
         queryKeysValues as OffsetLimitParams
       ),
@@ -44,7 +44,7 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
   )
 )
 
-app.get("/recommendations", (c) => Recommendations(c))
+app.get("/recommendations/:playlist_id", async (c) => TrackDescriptorSummary(c))
 
 app.post("/logout", logout)
 

@@ -47,7 +47,6 @@ export function modifiedDataAllTracksPlaylistTrackResponse(
       ]
     }
   }
-  console.log(modifiedData.length)
 
   return modifiedData
 }

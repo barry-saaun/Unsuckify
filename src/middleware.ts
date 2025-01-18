@@ -8,7 +8,8 @@ const protectedRoutes = [
   "/dashboard/:playlist_id",
   "/api/me",
   "/api/me/playlist",
-  "/api/playlists/:playlist_id/tracks"
+  "/api/playlists/:playlist_id/tracks",
+  "/api/recommendations/:playlist_id"
 ]
 
 // Helper function to check if path matches any patterns
@@ -20,8 +21,6 @@ const matchesRoute = (patterns: string[], path: string) =>
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
 
-  // const isPublicRoute = publicRoutes.includes(path)
-  // const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = matchesRoute(publicRoutes, path)
   const isProtectedRoute = matchesRoute(protectedRoutes, path)
 

@@ -75,7 +75,10 @@ export const spotifyApi = {
       playlist_id
     }),
 
-  testingQueryParam: (playlist_id: string, queryParams: OffsetLimitParams) =>
+  getPlaylistTrackWithQueryParams: (
+    playlist_id: string,
+    queryParams: OffsetLimitParams
+  ) =>
     spotifyFetch<PlaylistTrackResponse>(
       "/playlists/{playlist_id}/tracks",
       {
