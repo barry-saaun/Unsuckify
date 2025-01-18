@@ -44,7 +44,6 @@ function PulbicPlaylistTabContent() {
 
     const playlistUrl = playlistUrlObject.data?.url
     const playlist_id = playlistUrl?.split("?si")[0].split("playlist/")[1]
-    console.log(playlist_id)
     router.push(`/dashboard/${playlist_id}`)
   }
 

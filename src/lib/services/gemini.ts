@@ -12,7 +12,6 @@ const API_KEY = process.env.GOOGLE_GEMINI_API_KEY || ""
 export async function TrackDescriptorSummary(c: Context) {
   try {
     const playlist_id = c.req.param("playlist_id")
-    console.log("Playlist ID:", playlist_id)
 
     // Ensure playlist_id is valid
     if (!playlist_id) {

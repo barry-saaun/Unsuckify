@@ -3,7 +3,7 @@ import useIsAuthenticated from "./useIsAuthenticated"
 import axios from "axios"
 import { PlaylistTrackResponse } from "spotify-api"
 import { TrackObjectFull } from "spotify-api"
-import { getAccessToken } from "@/lib/services/spotify"
+import { getAccessToken } from "@/lib/auth/utils"
 
 const LIMIT = 100
 
@@ -46,7 +46,6 @@ export async function fetchTracks(playlist_id: string, isServerSide = false) {
       offset += LIMIT
     }
 
-    console.log("All tracks fetched: ", allTracks)
     return allTracks
   } catch (error: any) {
     console.error("Error in fetchTracks:", error.message)

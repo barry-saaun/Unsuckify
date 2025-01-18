@@ -8,6 +8,17 @@ export const ServerCheckAuth = async () => {
   return cookiesStore.has("access_token")
 }
 
+export async function getAccessToken() {
+  const hasAccessToken = await ServerCheckAuth()
+
+  if (!hasAccessToken) {
+    throw new Error("Access token can't be found in cookies store")
+  }
+
+  const cookiesStore = await cookies()
+  return cookiesStore.get("access_token")?.value
+}
+
 export const deleteSession = async (c: Context) => {
   const deletedKeys = ["access_token", "expires_at", "refresh_token"]
 
