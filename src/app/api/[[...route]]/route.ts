@@ -44,7 +44,7 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
   )
 )
 
-app.get("/recommendations/:playlist_id", async (c) => TrackDescriptorSummary(c))
+app.get("/recommendations/:playlist_id", TrackDescriptorSummary)
 
 app.post("/logout", logout)
 

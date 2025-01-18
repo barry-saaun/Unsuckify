@@ -37,6 +37,10 @@ export function modifiedDataAllTracksPlaylistTrackResponse(
         artists = track.artists.map((artist) => artist.name).join(", ")
       }
 
+      if (!artists) {
+        continue
+      }
+
       modifiedData = [
         ...modifiedData,
         {
