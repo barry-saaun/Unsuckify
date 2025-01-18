@@ -6,8 +6,30 @@ import {
   convertModifiedDataToString,
   modifiedDataAllTracksPlaylistTrackResponse
 } from "../utils"
+import { ResponseSchema } from "@google/generative-ai"
 
 const API_KEY = process.env.GOOGLE_GEMINI_API_KEY || ""
+
+async function geminiGenerateContent(
+  responseSchema: ResponseSchema,
+  prompt: string
+) {
+  const genAI = new GoogleGenerativeAI(API_KEY)
+
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: responseSchema
+    }
+  })
+
+  const result = await model.generateContent(prompt)
+
+  const jsonData = JSON.parse(result.response.text())
+
+  return jsonData
+}
 
 export async function TrackDescriptorSummary(c: Context) {
   try {
@@ -26,24 +48,11 @@ export async function TrackDescriptorSummary(c: Context) {
     const modifiedData = modifiedDataAllTracksPlaylistTrackResponse(allTracks)
     const formattedData = convertModifiedDataToString(modifiedData)
 
-    // const genAI = new GoogleGenerativeAI(API_KEY)
-    //
-    // const model = genAI.getGenerativeModel({
-    //   model: "gemini-1.5-flash",
-    //   generationConfig: {
-    //     responseMimeType: "application/json",
-    //     responseSchema: SummarySchema
-    //   }
-    // })
-    // const prompt = `I have a list of songs formatted as  'Song name - artist name - album name, as the following \n ${allTracks} \n Summarize the overall themes, genres, emotional tones, instrumentation, and rhythm of these songs in a concise format.`
+    const prompt = `I have a list of songs formatted as  'Song name - artist name - album name, as the following \n ${formattedData} \n Summarize the overall themes, genres, emotional tones, instrumentation, and rhythm of these songs in a concise format.`
 
-    // const result = await model.generateContent(prompt)
-    //
-    // const jsonData = JSON.parse(result.response.text())
-    //
-    // return c.json(jsonData)
+    const trackSummaryRes = await geminiGenerateContent(SummarySchema, prompt)
 
-    return c.json({ modifiedData })
+    return c.json(trackSummaryRes)
   } catch (error) {
     console.error("Error in TrackDescriptorSummary:", error)
     return c.json({ error: "Failed to fetch track descriptor summary" }, 500)
