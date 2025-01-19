@@ -3,7 +3,7 @@ import PlaylistJsonDataScroll from "@/components/PlaylistJsonDataScroll"
 import RecommendationDashboardTab from "@/components/RecommendationDashboardTab"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ToastBreakpointValues } from "@/constants/dynamicBreakpointValues"
+import { TOAST_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import { usePlaylistData } from "@/hooks/usePlaylistData"
 import { useSpotify } from "@/hooks/useSpotify"
@@ -29,7 +29,9 @@ const PlaylistContentDashboard = () => {
   const router = useRouter()
 
   const [isCopied, setIsCopied] = useState<boolean>(false)
-  const { value: toastWidth } = useDynamicBreakpointValue(ToastBreakpointValues)
+  const { value: toastWidth } = useDynamicBreakpointValue(
+    TOAST_BREAKPOINT_VALUES
+  )
 
   if (isLoading && playlistLoading) {
     return (

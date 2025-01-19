@@ -1,5 +1,5 @@
 "use client"
-import { CodeBlockBreakpointValues } from "@/constants/dynamicBreakpointValues"
+import { CODE_BLOCK_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import React, { useState, useEffect, useRef } from "react"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
@@ -18,7 +18,7 @@ const CodeGenerationEffect = ({
 }: CodeGenerationProps) => {
   const [code, setCode] = useState("")
   const { value: codeFontSize } = useDynamicBreakpointValue(
-    CodeBlockBreakpointValues
+    CODE_BLOCK_BREAKPOINT_VALUES
   )
   const containerRef = useRef<HTMLDivElement>(null)
 

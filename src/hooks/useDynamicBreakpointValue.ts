@@ -1,12 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-
-type BreakpointValues = {
-  default: string
-  sm: string
-  md: string
-  lg: string
-}
+import { BreakpointValues } from "@/types/index"
 
 const useDynamicBreakpointValue = (breakpoint_values: BreakpointValues) => {
   const [value, setValue] = useState<string>("")
@@ -17,17 +11,17 @@ const useDynamicBreakpointValue = (breakpoint_values: BreakpointValues) => {
       // These breakpoints are by TailwindCSS convention
       // sm
       if (windowWith >= 640 && windowWith < 768) {
-        setValue(breakpoint_values.sm)
+        setValue(breakpoint_values.SM)
         // md
       } else if (windowWith >= 768 && windowWith < 1024) {
-        setValue(breakpoint_values.md)
+        setValue(breakpoint_values.MD)
         // lg
       } else if (windowWith >= 1024) {
-        setValue(breakpoint_values.lg)
+        setValue(breakpoint_values.LG)
 
         // i.e., below 640, set as a default value
       } else {
-        setValue(breakpoint_values.default)
+        setValue(breakpoint_values.DEFAULT)
       }
     }
 

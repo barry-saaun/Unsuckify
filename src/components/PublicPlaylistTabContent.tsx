@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { Bounce, toast, ToastContainer } from "react-toastify"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
-import { ToastBreakpointValues } from "@/constants/dynamicBreakpointValues"
+import { TOAST_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
 
 const FormSchema = z.object({
   url: z
@@ -30,7 +30,9 @@ const FormSchema = z.object({
 function PulbicPlaylistTabContent() {
   const router = useRouter()
   // const { toastWidth } = useDynamicToastWidth()
-  const { value: toastWidth } = useDynamicBreakpointValue(ToastBreakpointValues)
+  const { value: toastWidth } = useDynamicBreakpointValue(
+    TOAST_BREAKPOINT_VALUES
+  )
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
