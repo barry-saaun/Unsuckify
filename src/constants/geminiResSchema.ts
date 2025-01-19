@@ -42,3 +42,12 @@ export const SummarySchema = {
   },
   required: ["emotional_tones", "themes", "genres", "instrumentation", "rhythm"]
 }
+
+export const RecommendationsListSchema = {
+  description: "Schema for returning a list of recommended songs.",
+  type: SchemaType.ARRAY,
+  items: {
+    type: SchemaType.STRING,
+    description: "One of the recommended songs within the list."
+  }
+}

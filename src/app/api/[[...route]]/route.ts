@@ -1,6 +1,6 @@
 import { getAuthEndpointUrl, getOAuthCode } from "@/lib/auth/getAuthCode"
 import { logout } from "@/lib/auth/utils"
-import { TrackDescriptorSummary } from "@/lib/services/gemini"
+import { Recommendations } from "@/lib/services/gemini"
 import getApiDataWithParam from "@/lib/services/getApiDataWithParam"
 import getApiDataWithParamAndQuery from "@/lib/services/getApiDataWithParamAndQuery"
 import { serverGetData } from "@/lib/services/serverGetData"
@@ -44,7 +44,7 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
   )
 )
 
-app.get("/recommendations/:playlist_id", TrackDescriptorSummary)
+app.get("/recommendations/:playlist_id", Recommendations)
 
 app.post("/logout", logout)
 

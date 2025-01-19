@@ -1,6 +1,7 @@
 export type ErrorResponse = {
   error: string
   success: false
+  status?: number
 }
 
 export type SpotifyFetchReturnType<T> = Promise<T | ErrorResponse>
@@ -15,3 +16,8 @@ export type ModifiedDataType = {
   artists?: string
   track?: string
 }[]
+
+export type TrackDescriptorSummaryResType = Record<
+  "emotional_tones" | "genres" | "instrumentation" | "rhythm" | "themes",
+  string[]
+>
