@@ -3,6 +3,7 @@ import { logout } from "@/lib/auth/utils"
 import { Recommendations } from "@/lib/services/gemini"
 import getApiDataWithParam from "@/lib/services/getApiDataWithParam"
 import getApiDataWithParamAndQuery from "@/lib/services/getApiDataWithParamAndQuery"
+import { getSlashMeEndpoint } from "@/lib/services/getSlashMeEndpont"
 import { serverGetData } from "@/lib/services/serverGetData"
 import { spotifyApi } from "@/lib/services/spotify"
 import { OffsetLimitParams } from "@/types/index"
@@ -21,7 +22,8 @@ app.get("/login", getAuthEndpointUrl)
 
 app.get("/callback", getOAuthCode)
 
-app.get("/me", (c) => serverGetData(c, spotifyApi.getCurrentUsersProfile))
+// app.get("/me", (c) => serverGetData(c, spotifyApi.getCurrentUsersProfile))
+app.get("/me", (c) => getSlashMeEndpoint(c))
 
 app.get("/me/playlists", (c) =>
   serverGetData(c, spotifyApi.getListOfCurrentUsersPlaylists)
