@@ -48,7 +48,6 @@ export async function getOAuthCode(c: Context) {
 
   try {
     const tokenEndpoint = "https://accounts.spotify.com/api/token"
-    // const credentials = `${CLIENT_ID}:${CLIENT_SECRET}`
     const credentials = Buffer.from(
       `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
     ).toString("base64")

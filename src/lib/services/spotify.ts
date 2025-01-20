@@ -8,11 +8,6 @@ import { OffsetLimitParams, SpotifyFetchReturnType } from "@/types/index"
 import queryString from "query-string"
 import { getAccessToken } from "../auth/utils"
 
-// export async function getAccessToken() {
-//   const cookiesStore = await cookies()
-//   return cookiesStore.get("access_token")?.value
-// }
-
 async function spotifyFetch<T>(
   endpoint: string,
   params?: Record<string, string>,

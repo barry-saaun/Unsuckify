@@ -20,7 +20,7 @@ export async function getAccessToken() {
 }
 
 export const deleteSession = async (c: Context) => {
-  const deletedKeys = ["access_token", "expires_at", "refresh_token"]
+  const deletedKeys = ["access_token", "expires_at", "refresh_token", "userId"]
 
   deletedKeys.forEach((key) => deleteCookie(c, key))
 }

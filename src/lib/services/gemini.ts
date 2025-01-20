@@ -47,7 +47,6 @@ export async function TrackDescriptorSummary(
 
     // Ensure playlist_id is valid
     if (!playlist_id) {
-      // return c.json({ error: "Invalid playlist ID" }, 400)
       return { error: "Invalid playlist ID", success: false, status: 400 }
     }
 
