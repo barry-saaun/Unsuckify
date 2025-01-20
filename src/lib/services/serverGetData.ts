@@ -13,11 +13,15 @@ export async function serverGetData<T extends object | null>(
     const data = await fetchFn()
 
     if (isErrorResponse(data)) {
-      return c.json({ error: data.error }, 500)
+      return c.json({ error: data.error, status: 500, success: false })
     }
 
     return c.json(data)
   } catch (error) {
-    return c.json({ error: "An expected error occurred" }, 500)
+    return c.json({
+      error: "An expected error occurred",
+      status: 500,
+      success: false
+    })
   }
 }
