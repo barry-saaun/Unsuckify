@@ -1,6 +1,6 @@
 import { Context } from "hono"
 import { serverGetData } from "./serverGetData"
-import { spotifyApi } from "./spotify"
+import { spotifyApi } from "../spotify"
 import { CurrentUsersProfileResponse } from "spotify-api"
 import { setCookie } from "hono/cookie"
 import { cookies } from "next/headers"

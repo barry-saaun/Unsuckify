@@ -1,6 +1,6 @@
 import { Context } from "hono"
 import { ErrorResponse } from "@/types/index"
-import { assertError } from "../utils"
+import { assertError } from "../../utils"
 
 function isErrorResponse(data: unknown): data is ErrorResponse {
   return typeof data === "object" && data !== null && "error" in data

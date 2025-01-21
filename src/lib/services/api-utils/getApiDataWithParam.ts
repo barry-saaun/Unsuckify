@@ -1,7 +1,7 @@
 import { Context } from "hono"
 import { SpotifyFetchReturnType } from "@/types/index"
 import { serverGetData } from "./serverGetData"
-import { assertError } from "../utils"
+import { assertError } from "../../utils"
 
 async function getApiDataWithParam<T extends object | null>(
   c: Context,
