@@ -95,11 +95,7 @@ export async function Recommendations(c: Context) {
   const res = await RecommendationsRequest(c)
 
   if (!res) {
-    return c.json({
-      error: "Recommendations cannot be fetch",
-      status: 404,
-      success: false
-    })
+    return c.json(assertError("Recommendations cannot be fetch", 404))
   }
 
   const page = parseInt(c.req.query("page") || "1", 10)
