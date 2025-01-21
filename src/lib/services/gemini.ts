@@ -70,11 +70,13 @@ export async function TrackDescriptorSummary(
   }
 }
 
-export async function Recommendations(c: Context) {
+export async function RecommendationsRequest(
+  c: Context
+): Promise<string[] | ErrorResponse> {
   const trackSummary = await TrackDescriptorSummary(c)
 
   if (!trackSummary || "error" in trackSummary) {
-    return c.json(assertError(trackSummary.error, trackSummary.status))
+    return assertError(trackSummary.error, trackSummary.status)
   }
   console.log(trackSummary)
 
@@ -86,5 +88,21 @@ export async function Recommendations(c: Context) {
   )
   console.log(recommendationsRes)
 
-  return c.json(recommendationsRes)
+  return recommendationsRes
+}
+
+export async function Recommendations(c: Context) {
+  const res = await RecommendationsRequest(c)
+
+  if (!res) {
+    return c.json({
+      error: "Recommendations cannot be fetch",
+      status: 404,
+      success: false
+    })
+  }
+
+  const page = parseInt(c.req.query("page") || "1", 10)
+  const pageSize = 10
+  // const pageIdx =
 }
