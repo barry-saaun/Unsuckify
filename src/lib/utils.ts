@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { TrackObjectFull } from "spotify-api"
 import { twMerge } from "tailwind-merge"
-import { ModifiedDataType } from "../types/index"
+import { ErrorResponse, ModifiedDataType } from "../types/index"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -109,4 +109,16 @@ export function convertModifiedDataToString(
   }
 
   return TracksStringArray
+}
+
+export function assertError(
+  error: string,
+  status: number,
+  success: false = false
+): ErrorResponse {
+  return {
+    error,
+    status,
+    success
+  }
 }

@@ -1,6 +1,7 @@
 import { Context } from "hono"
 import { SpotifyFetchReturnType } from "@/types/index"
 import { serverGetData } from "./serverGetData"
+import { assertError } from "../utils"
 
 async function getApiDataWithParamAndQuery<T extends object | null>(
   c: Context,
@@ -27,7 +28,7 @@ async function getApiDataWithParamAndQuery<T extends object | null>(
     const data = await fetchFn(c.req.param(paramName), queryParamsValues)
     if (data && "success" in data && data.success === false) {
       // Transform the error response for `serverGetData`
-      return { error: data.error }
+      return assertError(data.error, data.status)
     }
 
     return data

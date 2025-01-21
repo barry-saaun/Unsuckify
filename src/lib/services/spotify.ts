@@ -7,6 +7,7 @@ import {
 import { OffsetLimitParams, SpotifyFetchReturnType } from "@/types/index"
 import queryString from "query-string"
 import { getAccessToken } from "../auth/utils"
+import { assertError } from "../utils"
 
 async function spotifyFetch<T>(
   endpoint: string,
@@ -17,7 +18,7 @@ async function spotifyFetch<T>(
     const access_token = await getAccessToken()
 
     if (!access_token) {
-      return { success: false, error: "Access Token is missing or invalid" }
+      return assertError("Access Token is missing or invalid", 401)
     }
 
     const baseUrl = "https://api.spotify.com/v1"
@@ -45,14 +46,14 @@ async function spotifyFetch<T>(
 
     if (!res.ok) {
       console.error(`Error fetching data: ${res.statusText}`)
-      return { success: false, error: `Error: ${res.status} ${res.statusText}` }
+      return assertError(`Error: ${res.status} ${res.statusText}`, 500)
     }
 
     const data = await res.json()
     return data as T
   } catch (error) {
     console.error(error)
-    return { success: false, error: `Error in fetching Spotify Data` }
+    return assertError("Error in fetching Spotify Data", 500)
   }
 }
 

@@ -6,6 +6,7 @@ import {
 } from "@/constants/geminiResSchema"
 import { fetchTracks } from "@/hooks/usePlaylistData"
 import {
+  assertError,
   convertModifiedDataToString,
   modifiedDataAllTracksPlaylistTrackResponse
 } from "../utils"
@@ -47,13 +48,13 @@ export async function TrackDescriptorSummary(
 
     // Ensure playlist_id is valid
     if (!playlist_id) {
-      return { error: "Invalid playlist ID", success: false, status: 400 }
+      return assertError("Invalid playlist ID", 400)
     }
 
     const allTracks = await fetchTracks(playlist_id, true)
 
     if (!allTracks || allTracks.length == 0) {
-      return { error: "No tracks fetched", success: false, status: 404 }
+      return assertError("No tracks fetched", 404)
     }
     const modifiedData = modifiedDataAllTracksPlaylistTrackResponse(allTracks)
     const formattedData = convertModifiedDataToString(modifiedData)
@@ -65,12 +66,7 @@ export async function TrackDescriptorSummary(
 
     return trackSummaryRes
   } catch (error) {
-    console.error("Error in TrackDescriptorSummary:", error)
-    return {
-      error: "Failed to fetch track descriptor summary",
-      status: 500,
-      success: false
-    }
+    return assertError("Failed to fetch track descriptor summary", 500)
   }
 }
 
@@ -78,11 +74,7 @@ export async function Recommendations(c: Context) {
   const trackSummary = await TrackDescriptorSummary(c)
 
   if (!trackSummary || "error" in trackSummary) {
-    return c.json({
-      error: trackSummary.error,
-      status: trackSummary.status,
-      success: trackSummary.success
-    })
+    return c.json(assertError(trackSummary.error, trackSummary.status))
   }
   console.log(trackSummary)
 

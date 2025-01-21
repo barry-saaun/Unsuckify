@@ -1,7 +1,7 @@
 export type ErrorResponse = {
   error: string
-  success: false
-  status?: number
+  status: number
+  success: boolean
 }
 
 export type SpotifyFetchReturnType<T> = Promise<T | ErrorResponse>
