@@ -7,14 +7,16 @@ import { TOAST_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import { usePlaylistData } from "@/hooks/usePlaylistData"
 import { useSpotify } from "@/hooks/useSpotify"
+import { redis } from "@/lib/services/redis"
 import {
   modifiedDataAllTracksPlaylistTrackResponse,
   setCodeGenRenderTime
 } from "@/lib/utils"
 import { ModifiedDataType } from "@/types/index"
+import axios from "axios"
 import { CheckCircle2, ChevronLeft, Loader2 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Bounce, toast, ToastContainer } from "react-toastify"
 import { SinglePlaylistResponse } from "spotify-api"
 
@@ -32,6 +34,21 @@ const PlaylistContentDashboard = () => {
   const { value: toastWidth } = useDynamicBreakpointValue(
     TOAST_BREAKPOINT_VALUES
   )
+
+  useEffect(() => {
+    const pushOwnerId = async () => {
+      try {
+        const ownerId = playlist_data?.owner.id
+        await axios.post(`/api/setRedis`, {
+          playlist_id,
+          ownerId
+        })
+      } catch (error) {
+        throw new Error()
+      }
+    }
+    pushOwnerId()
+  }, [playlist_data, playlist_id])
 
   if (isLoading && playlistLoading) {
     return (

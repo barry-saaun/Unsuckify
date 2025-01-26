@@ -9,6 +9,7 @@ import { spotifyApi } from "@/lib/services/spotify"
 import { OffsetLimitParams } from "@/types/index"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
+import { redisSetOwnerId } from "@/lib/services/api-utils/redisSetOwnerId"
 
 export const runtime = "edge"
 
@@ -46,6 +47,8 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
 )
 
 app.get("/recommendations/:playlist_id", Recommendations)
+
+app.post("/setRedis", redisSetOwnerId)
 
 app.post("/logout", logout)
 
