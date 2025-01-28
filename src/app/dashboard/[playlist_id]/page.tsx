@@ -7,7 +7,6 @@ import { TOAST_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import { usePlaylistData } from "@/hooks/usePlaylistData"
 import { useSpotify } from "@/hooks/useSpotify"
-import { redis } from "@/lib/services/redis"
 import {
   modifiedDataAllTracksPlaylistTrackResponse,
   setCodeGenRenderTime
@@ -35,8 +34,13 @@ const PlaylistContentDashboard = () => {
     TOAST_BREAKPOINT_VALUES
   )
 
+  // push necessary data to @upstash/redis
   useEffect(() => {
     const pushOwnerId = async () => {
+      if (!playlist_data?.owner.id || !playlist_id) {
+        return
+      }
+
       try {
         const ownerId = playlist_data?.owner.id
         await axios.post(`/api/setRedis`, {

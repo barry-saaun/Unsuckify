@@ -6,6 +6,7 @@ import { RecommendationsListSchema } from "@/schemas/gemini_schema"
 import { geminiGenerateContent } from "./geminiGenerateContent"
 import { geminiRecommendationsPrompt } from "@/constants/geminiPrompts"
 import { redis } from "../redis"
+import { RedisSummarySchema } from "@/schemas/redis_schema"
 
 export async function RecommendationsRequest(
   c: Context
@@ -19,22 +20,40 @@ export async function RecommendationsRequest(
 
     const summaryFieldExists = fields[0]?.includes("summary")
 
-    const ownerIdExists = fields.some(
-      (field) => Array.isArray(field) && field.includes("ownerId")
-    )
-    console.log("ownerId exists", ownerIdExists)
-
-    console.log("summary exists", summaryFieldExists)
-
     let trackSummary: TrackDescriptorSummaryResType | null = null
 
+    // if the data exist in the DB, fetch the cached data
     if (summaryFieldExists) {
-      const getCachedTrackSummary = await redis.json.get(
+      console.log("fetched from redis")
+
+      const getCachedTrackSummary = (await redis.json.get(
         `playlist:${playlist_id}:summ`,
-        "$.summary"[0]
+        "$.summary"
+      )) as Array<TrackDescriptorSummaryResType>
+
+      console.log("cached track summary raw:", getCachedTrackSummary)
+
+      const parsedResult = RedisSummarySchema.safeParse(
+        getCachedTrackSummary[0]
       )
+
+      // zod schema validation
+      if (parsedResult.success) {
+        trackSummary = parsedResult.data
+      }
+      // zod error check
+      else {
+        console.error("Zod validation failed:", parsedResult.error)
+        return assertError("Invalid  cache track summary format", 500)
+      }
+
       trackSummary = getCachedTrackSummary[0]
-    } else {
+    }
+
+    // if not fetch from the API
+    else {
+      console.log("newly fetched from API")
+
       const fetchedSummary = await TrackDescriptorSummary(c)
       if ("error" in fetchedSummary) {
         return assertError(fetchedSummary.error, fetchedSummary.status)
@@ -49,7 +68,7 @@ export async function RecommendationsRequest(
       )
     }
 
-    console.log("summary: ", trackSummary)
+    console.log("final summary: ", trackSummary)
 
     const recommendationsPrompt = geminiRecommendationsPrompt(trackSummary)
 

@@ -1,20 +1,17 @@
 import { Context } from "hono"
 import { assertError } from "../../utils"
 import { RecommendationsRequest } from "./recomendationsRequest"
+import { ErrorResponse } from "@/types/index"
 
 export async function Recommendations(c: Context) {
-  const recList = await RecommendationsRequest(c)
+  const recList: string[] | ErrorResponse = await RecommendationsRequest(c)
 
-  if (!recList || "error" in recList) {
-    return c.json(assertError("Recommendations cannot be fetched", 404))
+  if ("error" in recList) {
+    return c.json(assertError(recList.error, recList.status))
   }
 
-  // const page = parseInt(c.req.query("page") || "1", 10)
-  //
-  // const paginationRecommendations = await fetchRecommendedItems({
-  //   pageParam: 1
-  // })
+  console.log(recList.length)
 
-  console.log(recList)
+  // TODO: Finalise the implementation
   return c.json(recList)
 }

@@ -8,7 +8,7 @@ import {
 import { ErrorResponse, TrackDescriptorSummaryResType } from "@/types/index"
 import { Context } from "hono"
 import { geminiGenerateContent } from "./geminiGenerateContent"
-import { SummarySchema } from "@/schemas/gemini_schema"
+import { GeminiSummarySchema } from "@/schemas/gemini_schema"
 import { redis } from "../redis"
 
 export async function TrackDescriptorSummary(
@@ -33,7 +33,7 @@ export async function TrackDescriptorSummary(
     const summaryPrompt = geminiSummaryPrompt(formattedData)
 
     const trackSummaryRes: TrackDescriptorSummaryResType =
-      await geminiGenerateContent(summaryPrompt, SummarySchema)
+      await geminiGenerateContent(summaryPrompt, GeminiSummarySchema)
 
     const redisKey = `playlist:${playlist_id}:summ`
 

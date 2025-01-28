@@ -28,3 +28,10 @@ export type TrackDescriptorSummaryResType = Record<
   "emotional_tones" | "genres" | "instrumentation" | "rhythm" | "themes",
   string[]
 >
+
+export type PaginatedRecommendationsType = {
+  data: string[]
+  currentPage: number
+  nextPage: number | null
+  total: number
+}

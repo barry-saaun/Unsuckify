@@ -7,9 +7,21 @@ export async function redisSetOwnerId(c: Context) {
     const body = await c.req.json()
     const { playlist_id, ownerId } = body
 
-    await redis.hset(`playlist:${playlist_id}:summ`, { ownerId })
+    const key = `playlist:${playlist_id}:summ`
 
-    return new Response("OK")
+    try {
+      const exists = await redis.exists(key)
+
+      if (exists === 0) {
+        await redis.json.set(key, "$", { ownerId })
+        return new Response("Key was set")
+      }
+
+      return new Response("Key already exists")
+    } catch (error) {
+      console.error("Redis error:", error)
+      return c.json(assertError("Internal Server Error", 500))
+    }
   } else {
     c.header("Allow", "POST")
   }
