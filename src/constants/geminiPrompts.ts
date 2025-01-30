@@ -19,5 +19,10 @@ Provide 50 songs that match the emotional tones, genres, instrumentation, rhythm
 6. The response must contain exactly 50 entries. Do not add any extra text before or after the list.
 
 Return only the formatted list of 50 songs.
-
 `
+
+export const geminiRecommendationsPromptWithOmit = (
+  trackDescriptorSummary: TrackDescriptorSummaryResType,
+  omittedData: string[]
+) =>
+  `${geminiRecommendationsPrompt(trackDescriptorSummary)} by omitting the following songs: \n ${JSON.stringify(omittedData, null, 2)} `

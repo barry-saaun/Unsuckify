@@ -4,12 +4,17 @@ import { TrackDescriptorSummary } from "./trackDescriptorSummary"
 import { assertError } from "@/lib/utils"
 import { RecommendationsListSchema } from "@/schemas/gemini_schema"
 import { geminiGenerateContent } from "./geminiGenerateContent"
-import { geminiRecommendationsPrompt } from "@/constants/geminiPrompts"
+import {
+  geminiRecommendationsPrompt,
+  geminiRecommendationsPromptWithOmit
+} from "@/constants/geminiPrompts"
 import { redis } from "../redis"
 import { RedisSummarySchema } from "@/schemas/redis_schema"
 
 export async function RecommendationsRequest(
-  c: Context
+  c: Context,
+  isFirstBatch: boolean,
+  omittedData: string[] | null
 ): Promise<string[] | ErrorResponse> {
   const playlist_id = c.req.param("playlist_id")
 
@@ -70,7 +75,10 @@ export async function RecommendationsRequest(
 
     console.log("final summary: ", trackSummary)
 
-    const recommendationsPrompt = geminiRecommendationsPrompt(trackSummary)
+    // const recommendationsPrompt = geminiRecommendationsPrompt(trackSummary)
+    const recommendationsPrompt = isFirstBatch
+      ? geminiRecommendationsPrompt(trackSummary)
+      : geminiRecommendationsPromptWithOmit(trackSummary, omittedData!)
 
     const recommendationsRes: string[] = await geminiGenerateContent(
       recommendationsPrompt,
