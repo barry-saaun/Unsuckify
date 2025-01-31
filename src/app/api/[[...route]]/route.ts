@@ -9,9 +9,7 @@ import { spotifyApi } from "@/lib/services/spotify"
 import { OffsetLimitParams } from "@/types/index"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
-import { redisSetOwnerId } from "@/lib/services/api-utils/redisSetOwnerId"
-import { TrackDescriptorSummary } from "@/lib/services/gemini/trackDescriptorSummary"
-import { RecommendationsRequest } from "@/lib/services/gemini/recomendationsRequest"
+import { redisSetOwnerId } from "@/lib/services/redis/redisSetOwnerId"
 
 export const runtime = "edge"
 
