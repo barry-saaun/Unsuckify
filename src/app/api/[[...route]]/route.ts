@@ -1,6 +1,6 @@
 import { getAuthEndpointUrl, getOAuthCode } from "@/lib/auth/getAuthCode"
 import { logout } from "@/lib/auth/utils"
-import { Recommendations } from "@/lib/services/gemini"
+import { Recommendations } from "@/lib/services/gemini/gemini"
 import getApiDataWithParam from "@/lib/services/api-utils/getApiDataWithParam"
 import getApiDataWithParamAndQuery from "@/lib/services/api-utils/getApiDataWithParamAndQuery"
 import { getSlashMeEndpoint } from "@/lib/services/api-utils/getSlashMeEndpont"
@@ -9,6 +9,9 @@ import { spotifyApi } from "@/lib/services/spotify"
 import { OffsetLimitParams } from "@/types/index"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
+import { redisSetOwnerId } from "@/lib/services/api-utils/redisSetOwnerId"
+import { TrackDescriptorSummary } from "@/lib/services/gemini/trackDescriptorSummary"
+import { RecommendationsRequest } from "@/lib/services/gemini/recomendationsRequest"
 
 export const runtime = "edge"
 
@@ -46,6 +49,8 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
 )
 
 app.get("/recommendations/:playlist_id", Recommendations)
+
+app.post("/setRedis", redisSetOwnerId)
 
 app.post("/logout", logout)
 

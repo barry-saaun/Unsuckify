@@ -1,6 +1,6 @@
 import { SchemaType } from "@google/generative-ai"
 
-export const SummarySchema = {
+export const GeminiSummarySchema = {
   description: "Schema, for emotional tones, themes, and genres.",
   type: SchemaType.OBJECT,
   properties: {
