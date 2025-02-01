@@ -48,7 +48,7 @@ export async function Recommendations(c: Context) {
     })
   )
 
-  const redis_recKey = `playlist:${playlist_id}:rec:${batchCount + 1}`
+  const redis_recKey = `playlist:${playlist_id}:rec:${batchCount}`
 
   const result = await redis.zadd(
     redis_recKey,
@@ -58,7 +58,6 @@ export async function Recommendations(c: Context) {
     // at the last index
   )
 
-  // TODO: Finalise the implementation
   return c.json({
     status: "success",
     msg: "Data cached successfully",

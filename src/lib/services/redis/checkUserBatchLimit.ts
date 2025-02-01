@@ -18,9 +18,9 @@ export async function checkUserBatchLimit(
     | string
     | null
 
-  const batchCount = batchCountRaw ? parseInt(batchCountRaw, 10) : 0
+  const batchCount = batchCountRaw ? parseInt(batchCountRaw, 10) : 1
 
-  if (batchCount >= 2) return { canRequest: false, batchCount }
+  if (batchCount > 2) return { canRequest: false, batchCount }
 
   await Promise.all([
     redis.hincrby(batchKey, playlist_id, 1),
