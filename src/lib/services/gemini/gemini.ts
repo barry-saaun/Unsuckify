@@ -4,6 +4,7 @@ import { RecommendationsRequest } from "./recomendationsRequest"
 import { ErrorResponse } from "@/types/index"
 import { checkUserBatchLimit } from "../redis/checkUserBatchLimit"
 import { redis } from "../redis"
+import { getCookie } from "hono/cookie"
 
 type ScoredMemberType = {
   score: number
@@ -14,6 +15,7 @@ export async function Recommendations(c: Context) {
   const playlist_id = c.req.param("playlist_id")
 
   const { canRequest, batchCount } = await checkUserBatchLimit(c, playlist_id)
+
   if (!canRequest) {
     return c.json(
       assertError(
@@ -57,6 +59,24 @@ export async function Recommendations(c: Context) {
     // -2 to omit the annoying response from Gemini that includes the placeholder which is appended
     // at the last index
   )
+
+  // for the love of baby J, why is gemini is so annoying to use, it keeps on generating placeholder data
+  // reuslt === 1, means the data is "Song name - Artist name - Album name"
+  if (result === 1) {
+    console.log("[gemini]: placeholder data was placed")
+    const userId = getCookie(c, "userId") ?? undefined
+
+    if (!userId) {
+      throw new Error("User id not found")
+    }
+
+    const batchKey = `user:${userId}:batchCounts`
+    await redis.json.set(
+      batchKey,
+      `$.${playlist_id}.batchCount`,
+      batchCount - 1
+    )
+  }
 
   return c.json({
     status: "success",

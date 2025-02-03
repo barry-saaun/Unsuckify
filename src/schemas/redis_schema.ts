@@ -22,3 +22,8 @@ export const RedisSummaryKey = z.object({
   summary: RedisSummarySchema,
   ownerId: z.string()
 })
+
+export const RedisPlaylistBatchCount_TimeStamp = z.object({
+  batchCount: z.number(),
+  createdAt: z.number()
+})
