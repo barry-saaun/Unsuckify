@@ -55,28 +55,8 @@ export async function Recommendations(c: Context) {
   const result = await redis.zadd(
     redis_recKey,
     ScoredMemberList[0],
-    ...ScoredMemberList.slice(1, -2)
-    // -2 to omit the annoying response from Gemini that includes the placeholder which is appended
-    // at the last index
+    ...ScoredMemberList
   )
-
-  // for the love of baby J, why is gemini is so annoying to use, it keeps on generating placeholder data
-  // reuslt === 1, means the data is "Song name - Artist name - Album name"
-  if (result === 1) {
-    console.log("[gemini]: placeholder data was placed")
-    const userId = getCookie(c, "userId") ?? undefined
-
-    if (!userId) {
-      throw new Error("User id not found")
-    }
-
-    const batchKey = `user:${userId}:batchCounts`
-    await redis.json.set(
-      batchKey,
-      `$.${playlist_id}.batchCount`,
-      batchCount - 1
-    )
-  }
 
   return c.json({
     status: "success",
