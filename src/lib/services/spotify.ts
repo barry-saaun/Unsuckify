@@ -8,6 +8,7 @@ import { OffsetLimitParams, SpotifyFetchReturnType } from "@/types/index"
 import queryString from "query-string"
 import { getAccessToken } from "../auth/utils"
 import { assertError } from "../utils"
+import axios from "axios"
 
 async function spotifyFetch<T>(
   endpoint: string,
@@ -36,7 +37,7 @@ async function spotifyFetch<T>(
 
     const url = `${baseUrl}${resolvedEndpoint}${queryParamsString}`
 
-    const res = await fetch(url, {
+    const res = await axios.get(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -44,13 +45,12 @@ async function spotifyFetch<T>(
       }
     })
 
-    if (!res.ok) {
+    if (res.status !== 200) {
       console.error(`Error fetching data: ${res.statusText}`)
       return assertError(`Error: ${res.status} ${res.statusText}`, 500)
     }
 
-    const data = await res.json()
-    return data as T
+    return res.data as T
   } catch (error) {
     console.error(error)
     return assertError("Error in fetching Spotify Data", 500)
