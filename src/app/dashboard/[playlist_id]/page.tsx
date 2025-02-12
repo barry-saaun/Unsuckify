@@ -4,8 +4,10 @@ import RecommendationDashboardTab from "@/components/RecommendationDashboardTab"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TOAST_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
+import { jsonTabPredefinedPrompt } from "@/constants/geminiPrompts"
 import useDynamicBreakpointValue from "@/hooks/useDynamicBreakpointValue"
 import { usePlaylistData } from "@/hooks/usePlaylistData"
+import useRecommendationTrigger from "@/hooks/useRecommendationTrigger"
 import { useSpotify } from "@/hooks/useSpotify"
 import {
   modifiedDataAllTracksPlaylistTrackResponse,
@@ -54,6 +56,9 @@ const PlaylistContentDashboard = () => {
     pushOwnerId()
   }, [playlist_data, playlist_id])
 
+  const { isRecommendationsLoading, requestRecommendations } =
+    useRecommendationTrigger(playlist_id)
+
   if (isLoading && playlistLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -78,11 +83,10 @@ const PlaylistContentDashboard = () => {
   }
 
   const playlistJson = JSON.stringify(modifiedData, null, 2)
-  const predefinedPrompt = `Given the following JSON object with the artists' names, album names, and track names: \n\n ${playlistJson} \n\n Recommend some songs (up to 10) that match the vibe, genre, or emotional tone of these tracks. The recommendations should not be limited to the same artists but should focus on similar musical styles, themes, or atmospheres.`
 
   const handleCopy = () => {
     window.focus()
-    navigator.clipboard.writeText(predefinedPrompt)
+    navigator.clipboard.writeText(jsonTabPredefinedPrompt(playlistJson))
     setIsCopied(true)
     setTimeout(() => setIsCopied(false), 2000)
     toast.success("🎉 Copied!", {
@@ -134,8 +138,14 @@ const PlaylistContentDashboard = () => {
             }
           />
         </TabsContent>
-        <TabsContent value="recommendation">
-          <RecommendationDashboardTab modifiedData={modifiedData} />
+        <TabsContent value="recommendation" onClick={requestRecommendations}>
+          {isRecommendationsLoading ? (
+            <div className="flex items-center justify-center h-screen">
+              <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+          ) : (
+            <RecommendationDashboardTab />
+          )}
         </TabsContent>
       </Tabs>
       <ToastContainer

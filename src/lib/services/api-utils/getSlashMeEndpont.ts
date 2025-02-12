@@ -8,7 +8,6 @@ import { cookies } from "next/headers"
 export async function getSlashMeEndpoint(c: Context) {
   const res = await serverGetData(c, spotifyApi.getCurrentUsersProfile)
 
-  console.log("getSlashMeEndpoint status: ", res.status)
   const jsonData = await res.json()
 
   if ("error" in res || res.status !== 200) {

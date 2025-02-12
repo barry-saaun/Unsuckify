@@ -29,6 +29,16 @@ export type TrackDescriptorSummaryResType = Record<
   string[]
 >
 
+export type QueryKeyObjectType = {
+  playlist_id: string
+  batchCount: number
+}
+
+export type ScoredMemberType = {
+  score: number
+  member: string
+}
+
 export type PaginatedRecommendationsType = {
   data: string[]
   currentPage: number

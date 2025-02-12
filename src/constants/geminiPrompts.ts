@@ -3,6 +3,9 @@ import { TrackDescriptorSummaryResType } from "@/types/index"
 export const geminiSummaryPrompt = (formattedData: string[]): string =>
   `I have a list of songs formatted as  'Song name - artist name - album name, as the following \n ${formattedData} \n Summarize the overall themes, genres, emotional tones, instrumentation, and rhythm of these songs in a concise format.`
 
+export const jsonTabPredefinedPrompt = (playlistJson: string): string =>
+  `Given the following JSON object with the artists' names, album names, and track names: \n\n  ${playlistJson} \n\n Recommend some songs (up to 10) that match the vibe, genre, or emotional tone of these tracks. The recommendations should not be limited to the same artists but should focus on similar musical styles, themes, or atmospheres.`
+
 export const geminiRecommendationsPrompt = (
   trackDescriptorSummary: TrackDescriptorSummaryResType
 ): string => `Based on the following input:

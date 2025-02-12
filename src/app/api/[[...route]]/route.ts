@@ -10,6 +10,8 @@ import { OffsetLimitParams } from "@/types/index"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
 import { redisSetOwnerId } from "@/lib/services/redis/redisSetOwnerId"
+import { getTracks } from "@/lib/services/api-utils/tracks"
+import { fetchCachedTracks } from "@/lib/services/redis/fetchCachedTracks"
 
 export const runtime = "edge"
 
@@ -47,6 +49,17 @@ app.get("/playlists/:playlist_id/tracks", (c) =>
 )
 
 app.get("/recommendations/:playlist_id", Recommendations)
+
+app.get("/getTracks/:playlist_id", async (c) => {
+  const playlist_id = c.req.param("playlist_id")
+  const batchCountRaw = c.req.query("batch") || "1"
+
+  if (!batchCountRaw) throw new Error("[server][query] batch cannot be found")
+
+  const batchCount = parseInt(batchCountRaw)
+  const data = await fetchCachedTracks({ playlist_id, batchCount })
+  return c.json(data)
+})
 
 app.post("/setRedis", redisSetOwnerId)
 

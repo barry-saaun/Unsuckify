@@ -1,15 +1,9 @@
 import { Context } from "hono"
 import { assertError } from "../../utils"
 import { RecommendationsRequest } from "./recomendationsRequest"
-import { ErrorResponse } from "@/types/index"
+import { ErrorResponse, ScoredMemberType } from "@/types/index"
 import { checkUserBatchLimit } from "../redis/checkUserBatchLimit"
 import { redis } from "../redis"
-import { getCookie } from "hono/cookie"
-
-type ScoredMemberType = {
-  score: number
-  member: string
-}
 
 export async function Recommendations(c: Context) {
   const playlist_id = c.req.param("playlist_id")
