@@ -18,7 +18,7 @@ export async function getTrackSummary(c: Context) {
 
     console.log("cached summary: ", getCachedTrackSummary)
 
-    if (getCachedTrackSummary.length) {
+    if (getCachedTrackSummary && getCachedTrackSummary.length > 0) {
       console.log("fetched from redis")
 
       const parsedResult = RedisSummarySchema.safeParse(

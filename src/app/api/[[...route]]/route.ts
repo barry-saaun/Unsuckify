@@ -10,7 +10,6 @@ import { OffsetLimitParams } from "@/types/index"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
 import { redisSetOwnerId } from "@/lib/services/redis/redisSetOwnerId"
-import { getTracks } from "@/lib/services/api-utils/tracks"
 import { fetchCachedTracks } from "@/lib/services/redis/fetchCachedTracks"
 
 export const runtime = "edge"

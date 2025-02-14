@@ -12,6 +12,7 @@ export default function useRecommendationTrigger(playlist_id: string) {
 
       try {
         const { data } = await axios.get(`/api/recommendations/${playlist_id}`)
+        console.log(`hook is triggered`)
 
         setIsRequested(true)
         return data

@@ -23,7 +23,6 @@ import { SinglePlaylistResponse } from "spotify-api"
 
 const PlaylistContentDashboard = () => {
   const { playlist_id } = useParams<{ playlist_id: string }>()
-
   const { data: playlist_data, isLoading: playlistLoading } =
     useSpotify<SinglePlaylistResponse>(`/playlists/${playlist_id}`, 60 * 1000)
 
@@ -50,7 +49,7 @@ const PlaylistContentDashboard = () => {
           ownerId
         })
       } catch (error) {
-        throw new Error()
+        throw new Error("[setOwnerId]: cannot be set")
       }
     }
     pushOwnerId()

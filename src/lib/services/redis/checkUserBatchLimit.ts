@@ -26,7 +26,7 @@ export async function checkUserBatchLimit(
 
   const existingData = existingDataArray?.[0] || {}
 
-  console.log(existingData)
+  console.log("[checkUserBatchLimit]: existingData in key", existingDataArray)
 
   const PlaylistKV = await redis.json.get<Array<RedisPlaylistBatchCountType>>(
     batchKey,

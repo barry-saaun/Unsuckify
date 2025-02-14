@@ -11,13 +11,14 @@ export async function fetchCachedTracks({
   console.log("[fetchCachedTracks]:", redis_recKey)
 
   try {
-    const _ = await axios.get(
-      `http://localhost:3000/api/recommendations/${playlist_id}`
-    )
+    // hit the endpoint for inserting subsequent batch to redis, i.e., first and second
+    await axios.get(`http://localhost:3000/api/recommendations/${playlist_id}`)
+    console.log(`[query]: success GET request "recommendations" endpoint`)
 
     const tracks = await redis.zrange<string[]>(redis_recKey, 0, -1)
     return tracks
   } catch (error) {
     console.error("[fetchTracks]:", error)
+    return []
   }
 }
