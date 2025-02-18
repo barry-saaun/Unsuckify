@@ -11,6 +11,7 @@ import { Hono } from "hono"
 import { handle } from "hono/vercel"
 import { redisSetOwnerId } from "@/lib/services/redis/redisSetOwnerId"
 import { fetchCachedTracks } from "@/lib/services/redis/fetchCachedTracks"
+import { assertError } from "@/lib/utils"
 
 export const runtime = "edge"
 
@@ -51,11 +52,35 @@ app.get("/recommendations/:playlist_id", Recommendations)
 
 app.get("/getTracks/:playlist_id", async (c) => {
   const playlist_id = c.req.param("playlist_id")
-  const batchCountRaw = c.req.query("batch") || "1"
+  const queryParams = c.req.query()
 
-  if (!batchCountRaw) throw new Error("[server][query] batch cannot be found")
+  console.log("queryParams: ", queryParams)
 
-  const batchCount = parseInt(batchCountRaw)
+  if (!("batch" in queryParams)) {
+    return c.json(
+      assertError("[server][query] 'batch' query param cannot be found", 400)
+    )
+  }
+
+  // appreantly queryParams returns {"route": "getTracks"} as well
+  const allowedQueries = ["batch", "route"]
+
+  const queryKeys = Object.keys(queryParams)
+
+  if (queryKeys.some((key) => !allowedQueries.includes(key))) {
+    return c.json(
+      assertError(
+        `[server][query] Invalid query parameter(s): ${queryKeys
+          .filter((k) => !allowedQueries.includes(k))
+          .join(", ")}`,
+        400
+      )
+    )
+  }
+
+  const batchCountRaw = queryParams.batch
+
+  const batchCount = parseInt(batchCountRaw, 10)
   const data = await fetchCachedTracks({ playlist_id, batchCount })
   return c.json(data)
 })
