@@ -1,11 +1,13 @@
 import axios from "axios"
 import { redis } from "."
-import { QueryKeyObjectType } from "@/types/index"
 
 export async function fetchCachedTracks({
   playlist_id,
   batchCount
-}: QueryKeyObjectType) {
+}: {
+  playlist_id: string
+  batchCount: number
+}) {
   const redis_recKey = `playlist:${playlist_id}:rec:${batchCount}`
 
   console.log("[fetchCachedTracks]:", redis_recKey)

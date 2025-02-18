@@ -29,10 +29,7 @@ export type TrackDescriptorSummaryResType = Record<
   string[]
 >
 
-export type QueryKeyObjectType = {
-  playlist_id: string
-  batchCount: number
-}
+export type PaginatedQueryKeyType = [string, { playlist_id: string }]
 
 export type ScoredMemberType = {
   score: number
