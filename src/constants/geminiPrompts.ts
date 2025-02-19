@@ -14,8 +14,8 @@ ${JSON.stringify(trackDescriptorSummary, null, 2)}
 Provide 50 songs that match the emotional tones, genres, instrumentation, rhythm, and themes. Ensure that:
 1. Each song is real, and the song name, artist name, and album name are accurately matched.
 2. Format each entry as a string using **exactly** this pattern:
-   "Song name - Artist name - Album name".
-   Do not include any additional text, headers, or examples (e.g., "Song Name - Artist Name - Album Name").
+   "Album Name - Artist Name - Song Name - Year".
+   Do not include any additional text, headers, or examples (e.g., "Album Name - Artist Name - Song Name - Year").
 3. If uncertain about the exact album or artist for a song, include only songs where all details can be confirmed. Do not leave gaps or return fewer than 50 songs. 
 4. If the input constraints limit the pool of possible songs, expand the scope slightly within reason to ensure a total of 50 entries.
 5. Double-check for accuracy to ensure all songs, artists, and albums are properly matched.
