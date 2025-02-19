@@ -14,7 +14,7 @@ export function getAuthEndpointUrl(c: Context) {
     const state = generateRandomString(16)
 
     const scope =
-      "playlist-read-private playlist-read-collaborative user-read-private user-read-email"
+      "playlist-read-private playlist-read-collaborative user-read-private user-read-email playlist-modify-public playlist-modify-private"
 
     const baseUrl = "https://accounts.spotify.com/authorize"
     const params = {
