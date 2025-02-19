@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "UNSUCKify",
+  title: "🥟 UNSUCKify",
   description: "Unsuck your favourite playlist."
 }
 
