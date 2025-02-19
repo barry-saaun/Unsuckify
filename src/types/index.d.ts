@@ -42,3 +42,10 @@ export type PaginatedRecommendationsType = {
   nextPage: number | null
   total: number
 }
+
+export type GetTracksReturnType = {
+  tracks: string[]
+  hasMore: boolean
+  hasMoreInCurrentBatch: boolean
+  nextBatch: number | null
+}

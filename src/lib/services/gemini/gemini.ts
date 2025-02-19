@@ -5,6 +5,9 @@ import { ErrorResponse, ScoredMemberType } from "@/types/index"
 import { checkUserBatchLimit } from "../redis/checkUserBatchLimit"
 import { redis } from "../redis"
 
+/**
+ * add 50 recommended tracks to subsequent batch and returns a success message
+ */
 export async function Recommendations(c: Context) {
   const playlist_id = c.req.param("playlist_id")
 
