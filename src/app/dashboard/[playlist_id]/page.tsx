@@ -112,11 +112,11 @@ const PlaylistContentDashboard = () => {
       </h1>
       <Tabs defaultValue="json">
         <TabsList className="space-x-3">
-          <TabsTrigger value="recommendation" className="font-bold">
-            Recommendation
-          </TabsTrigger>
           <TabsTrigger value="json" className="font-bold">
             JSON Data
+          </TabsTrigger>
+          <TabsTrigger value="recommendation" className="font-bold">
+            Recommendation
           </TabsTrigger>
         </TabsList>
         <TabsContent value="json">
