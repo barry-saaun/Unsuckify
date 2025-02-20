@@ -28,4 +28,4 @@ export const geminiRecommendationsPromptWithOmit = (
   trackDescriptorSummary: TrackDescriptorSummaryResType,
   omittedData: string[]
 ) =>
-  `${geminiRecommendationsPrompt(trackDescriptorSummary)} by omitting the following songs: \n ${JSON.stringify(omittedData, null, 2)} `
+  `${geminiRecommendationsPrompt(trackDescriptorSummary)} by omitting, i.e., none of the songs you will be recommending has no duplication to the following songs: \n ${JSON.stringify(omittedData, null, 2)} `

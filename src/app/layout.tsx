@@ -5,6 +5,8 @@ import "./globals.css"
 import { ThemeProvider as NextThemeProvider } from "@/components/theme-provider"
 import Providers from "./providers"
 import NavBar from "@/components/Navbar"
+import AuthCheck from "@/components/AuthCheck"
+import { cookies } from "next/headers"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,27 +23,33 @@ export const metadata: Metadata = {
   description: "Unsuck your favourite playlist."
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const access_token = await cookies()
+
+  const isAuthenticated = !!access_token
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black `}
       >
-        <Providers>
-          <NextThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NavBar />
-            {children}
-          </NextThemeProvider>
-        </Providers>
+        <AuthCheck isAuthenticated={isAuthenticated}>
+          <Providers>
+            <NextThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NavBar />
+              {children}
+            </NextThemeProvider>
+          </Providers>
+        </AuthCheck>
       </body>
     </html>
   )

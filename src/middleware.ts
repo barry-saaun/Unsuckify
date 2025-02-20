@@ -27,12 +27,31 @@ export async function middleware(req: NextRequest) {
   const cookiesStore = await cookies()
   const authenticated = cookiesStore.has("access_token")
 
+  const isExplicitLogin = path === "/login"
+
   if (isPublicRoute && authenticated) {
     return NextResponse.redirect(new URL("/", req.nextUrl))
   }
 
-  if (isProtectedRoute && !authenticated) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl))
+  if (isProtectedRoute && !authenticated && !isExplicitLogin) {
+    if (path.startsWith("/api")) {
+      return new NextResponse(
+        JSON.stringify({
+          message: "Unauthorized"
+        }),
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*", // Or your specific origin in production
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization"
+          }
+        }
+      )
+    } else {
+      return NextResponse.redirect(new URL("/login", req.nextUrl))
+    }
   }
 
   return NextResponse.next()

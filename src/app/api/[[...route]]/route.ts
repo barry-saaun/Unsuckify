@@ -11,10 +11,13 @@ import { Hono } from "hono"
 import { handle } from "hono/vercel"
 import { redisSetOwnerId } from "@/lib/services/redis/redisSetOwnerId"
 import { getTracks } from "@/lib/services/api-utils/getTracks"
+import { cors } from "hono/cors"
 
 export const runtime = "edge"
 
 const app = new Hono().basePath("/api")
+
+app.use("/*", cors())
 
 app.get("/search", (c) => {
   return c.json({ msg: "Hello Hono" })
