@@ -46,9 +46,10 @@ export async function TrackDescriptorSummary(
       summary: trackSummaryRes
     }
 
-    console.log(fullData)
-
     await redis.json.set(redisKey, "$", fullData)
+
+    // set the json with summary to be expired every 2 days
+    redis.expire(redisKey, 172800)
 
     return trackSummaryRes
   } catch (error) {

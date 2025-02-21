@@ -55,6 +55,9 @@ export async function Recommendations(c: Context) {
     ...ScoredMemberList
   )
 
+  // set the json with summary to be expired every 1 day
+  redis.expire(redis_recKey, 86400)
+
   return c.json({
     status: "success",
     msg: "Data cached successfully",
