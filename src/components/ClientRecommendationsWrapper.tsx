@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Recommendations from "./Recommendations"
 import { Loader2 } from "lucide-react"
 
@@ -26,7 +26,9 @@ export default function ClientRecommendationsWrapper({
     fetchOwnership()
   }, [playlist_id])
 
-  if (isOwned === null) {
+  const memoisedIsOwned = useMemo(() => isOwned, [isOwned])
+
+  if (memoisedIsOwned === null) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -34,5 +36,5 @@ export default function ClientRecommendationsWrapper({
     )
   }
 
-  return <Recommendations playlist_id={playlist_id} isOwned={isOwned} />
+  return <Recommendations playlist_id={playlist_id} isOwned={memoisedIsOwned} />
 }
