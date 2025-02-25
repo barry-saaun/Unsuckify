@@ -8,20 +8,28 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "./ui/tooltip"
+import { cn } from "@/lib/utils"
 
 type OwnedRecommendedTrackCardProps = {
+  playlist_id: string
   track_detail: string
   handleCardClick: (track_uri: string) => void
+  // isSelectable: boolean
+  // isSelected: boolean
 }
 
 const OwnedRecommendedTrackCard = ({
+  playlist_id,
   handleCardClick,
   track_detail
+  // isSelectable = false,
+  // isSelected = false,
 }: OwnedRecommendedTrackCardProps) => {
   const [__, artist_name, track_name, _] = track_detail.split(" - ")
   const { data, isLoading } = useSpotifyTrackSearch(track_detail)
 
   const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [isHovered, setIsHoverd] = useState(false)
 
   useEffect(() => {
     if (data?.album_image) {
@@ -39,7 +47,11 @@ const OwnedRecommendedTrackCard = ({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
-            <Card className="hover:scale-[1.025] transition-transform duration-100">
+            <Card
+              className={cn(
+                "hover:scale-[1.025] transition-transform duration-100 bg-card/50"
+              )}
+            >
               <div className="aspect-square relative bg-gray-200 rounded-t-xl">
                 <Image src="@/public/image_playlist_placeholder.svg" alt="" />
               </div>

@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { useParams } from "next/navigation"
 import { fetchPaginatedRecommendedTracks } from "@/lib/services/api-utils/tracks"
 import { PaginatedQueryKeyType } from "@/types/index"
 import OwnedRecommendedTrackCard from "./OwnedRecommendedTrackCard"
@@ -9,10 +8,16 @@ import { Spinner } from "./Icons"
 import { Info } from "lucide-react"
 import { useTheme } from "next-themes"
 
-const Recommendations: React.FC = () => {
-  const { playlist_id } = useParams<{ playlist_id: string }>()
+type RecommendationsProps = {
+  playlist_id: string
+  isOwned: boolean
+}
+
+const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
   const { theme } = useTheme()
+
   const [selectedTrack, setSelectedTrack] = useState(new Set<string>())
+  const [isHovered, setIsHovered] = useState(false)
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
@@ -39,6 +44,8 @@ const Recommendations: React.FC = () => {
 
   console.log(selectedTrack)
 
+  console.log(`isOwned:`, isOwned)
+
   return (
     <div className="container  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen ">
       <div className="w-3/4 h-12 my-5 px-3 bg-[#EEF2FD] dark:bg-[#19244B] rounded-md flex justify-start items-center gap-4">
@@ -56,6 +63,7 @@ const Recommendations: React.FC = () => {
         {data?.pages.flatMap((page) =>
           page.tracks.map((track, i) => (
             <OwnedRecommendedTrackCard
+              playlist_id={playlist_id}
               handleCardClick={handleCardClick}
               track_detail={track}
               key={`${i}-${track}`}

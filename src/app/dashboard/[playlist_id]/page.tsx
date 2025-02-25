@@ -1,6 +1,6 @@
 "use client"
+import ClientRecommendationsWrapper from "@/components/ClientRecommendationsWrapper"
 import PlaylistJsonDataScroll from "@/components/PlaylistJsonDataScroll"
-import RecommendationDashboardTab from "@/components/RecommendationDashboardTab"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TOAST_BREAKPOINT_VALUES } from "@/constants/dynamicBreakpointValues"
@@ -143,7 +143,7 @@ const PlaylistContentDashboard = () => {
               <Loader2 className="w-8 h-8 animate-spin" />
             </div>
           ) : (
-            <RecommendationDashboardTab />
+            <ClientRecommendationsWrapper playlist_id={playlist_id} />
           )}
         </TabsContent>
       </Tabs>
