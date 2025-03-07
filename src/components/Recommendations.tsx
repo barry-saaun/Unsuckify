@@ -9,8 +9,9 @@ import { Info } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
-import { cn } from "@/lib/utils"
 import { useDebounce } from "@uidotdev/usehooks"
+import { Card, CardContent } from "./ui/card"
+import PlaylistPrivacySection from "./PlaylistPrivacySection"
 
 type RecommendationsProps = {
   playlist_id: string
@@ -34,6 +35,9 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
   const [selectedTracks, setSelectedTracks] = useState(
     new Set<string>(new Set())
   )
+
+  const [isPublic, setIsPublic] = useState(true)
+
   const handleNotIsOwnedCardClick = (track_uri: string) => {
     setSelectedTracks((prev) => {
       const newTrackUri = new Set(prev)
@@ -55,34 +59,36 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
   return (
     <div className="container  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen border-none ">
       {!isOwned && (
-        <section className="w-full flex flex-col  space-y-2 mt-7 ">
-          <Label htmlFor="playlist-name">Playlist Name</Label>
-          <Input
-            type="text"
-            value={newPlaylistName}
-            onChange={(e) => setNewPlaylistName(e.target.value)}
-            placeholder="Enter playlist name"
-            className="sm:w-3/4 md:w-1/2 lg:w-1/4"
-          />
-          <div className="flex gap-5 ">
+        <Card className="mb-8 w-full">
+          <CardContent className="p-6 space-y-5">
+            <h2 className="text-2xl font-bold mb-6">Create New Playlist</h2>
+            <div>
+              <Label
+                htmlFor="playlist-name"
+                className="text-sm font-semibold mb-2 block"
+              >
+                Playlist Name
+              </Label>
+              <Input
+                id="playlist-name"
+                value={newPlaylistName}
+                onChange={(e) => setNewPlaylistName(e.target.value)}
+                placeholder="Enter playlist name"
+                className="w-full"
+              />
+            </div>
+            <PlaylistPrivacySection
+              isPublic={isPublic}
+              onPrivacyChange={setIsPublic}
+            />
             <Button
-              variant="secondary"
-              className="font-semibold"
-              // onClick={handleSelectAll}
-            >
-              Select All
-            </Button>
-            <Button variant="secondary" className="font-semibold">
-              Deselect All
-            </Button>
-            <Button
-              className={cn("font-semibold disabled:cursor-not-allowed")}
+              className="w-full font-semibold disabled:cursor-not-allowed"
               disabled={!newPlaylistName}
             >
-              Create Playlist
+              Create New Playlist
             </Button>
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       )}
       <div className="w-3/4 h-12 my-5 px-3 bg-[#EEF2FD] dark:bg-[#19244B] rounded-md flex justify-start items-center gap-4">
         {theme === "dark" ? (
