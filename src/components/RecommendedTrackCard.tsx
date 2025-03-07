@@ -15,7 +15,6 @@ type RecommendedTrackCardProps = {
   playlist_id: string
   track_detail: string
   isOwned: boolean
-  hasSelectedAll: boolean
   handleNotIsOwnedCardClick: (track_uri: string) => void
   onAddToPlaylist?: (track_uri: string) => Promise<void>
 }

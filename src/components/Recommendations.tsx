@@ -10,6 +10,7 @@ import { useTheme } from "next-themes"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { cn } from "@/lib/utils"
+import { useDebounce } from "@uidotdev/usehooks"
 
 type RecommendationsProps = {
   playlist_id: string
@@ -28,20 +29,13 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
     })
 
   const [newPlaylistName, setNewPlaylistName] = useState("")
+  const debouncedNewPlaylistName = useDebounce(newPlaylistName, 300)
 
-  const [selectedTrack, setSelectedTrack] = useState(new Set<string>(new Set()))
-
-  // const handleSelectAll = () => {
-  //   const allTracksUri = Object.values(trackData).map((data) => data.track_uri)
-  //   setSelectedTrack(new Set(allTracksUri))
-  // }
-
-  const handleDeselectAll = () => {
-    setSelectedTrack(new Set())
-  }
-
+  const [selectedTracks, setSelectedTracks] = useState(
+    new Set<string>(new Set())
+  )
   const handleNotIsOwnedCardClick = (track_uri: string) => {
-    setSelectedTrack((prev) => {
+    setSelectedTracks((prev) => {
       const newTrackUri = new Set(prev)
 
       // handle select and deselect logic
@@ -55,7 +49,8 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
     })
   }
 
-  console.log(selectedTrack)
+  console.log(selectedTracks)
+  console.log(debouncedNewPlaylistName)
 
   return (
     <div className="container  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen border-none ">
@@ -109,8 +104,6 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
               handleNotIsOwnedCardClick={handleNotIsOwnedCardClick}
               track_detail={track}
               isOwned={isOwned}
-              hasSelectedAll={false}
-              // isSelected={selectedTrack.has(trackData[track]?.track_uri)}
             />
           ))
         )}
