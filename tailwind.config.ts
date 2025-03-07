@@ -64,6 +64,7 @@ export default {
   },
   plugins: [
     require("tailwindcss-animate"),
+    require("tailwindcss-animated"),
     addVariablesForColors,
     function ({ matchUtilities, theme }: any) {
       matchUtilities(

@@ -2,11 +2,14 @@ import React, { useState } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { fetchPaginatedRecommendedTracks } from "@/lib/services/api-utils/tracks"
 import { PaginatedQueryKeyType } from "@/types/index"
-import OwnedRecommendedTrackCard from "./OwnedRecommendedTrackCard"
+import RecommendedTrackCard from "./RecommendedTrackCard"
 import { Button } from "./ui/button"
 import { Spinner } from "./Icons"
 import { Info } from "lucide-react"
 import { useTheme } from "next-themes"
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
+import { cn } from "@/lib/utils"
 
 type RecommendationsProps = {
   playlist_id: string
@@ -16,9 +19,6 @@ type RecommendationsProps = {
 const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
   const { theme } = useTheme()
 
-  const [selectedTrack, setSelectedTrack] = useState(new Set<string>())
-  const [isHovered, setIsHovered] = useState(false)
-
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ["tracks", { playlist_id }] as PaginatedQueryKeyType,
@@ -27,7 +27,20 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
       getNextPageParam: (lastPage) => lastPage.nextPage
     })
 
-  const handleCardClick = (track_uri: string) => {
+  const [newPlaylistName, setNewPlaylistName] = useState("")
+
+  const [selectedTrack, setSelectedTrack] = useState(new Set<string>(new Set()))
+
+  // const handleSelectAll = () => {
+  //   const allTracksUri = Object.values(trackData).map((data) => data.track_uri)
+  //   setSelectedTrack(new Set(allTracksUri))
+  // }
+
+  const handleDeselectAll = () => {
+    setSelectedTrack(new Set())
+  }
+
+  const handleNotIsOwnedCardClick = (track_uri: string) => {
     setSelectedTrack((prev) => {
       const newTrackUri = new Set(prev)
 
@@ -44,10 +57,38 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
 
   console.log(selectedTrack)
 
-  console.log(`isOwned:`, isOwned)
-
   return (
-    <div className="container  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen ">
+    <div className="container  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen border-none ">
+      {!isOwned && (
+        <section className="w-full flex flex-col  space-y-2 mt-7 ">
+          <Label htmlFor="playlist-name">Playlist Name</Label>
+          <Input
+            type="text"
+            value={newPlaylistName}
+            onChange={(e) => setNewPlaylistName(e.target.value)}
+            placeholder="Enter playlist name"
+            className="sm:w-3/4 md:w-1/2 lg:w-1/4"
+          />
+          <div className="flex gap-5 ">
+            <Button
+              variant="secondary"
+              className="font-semibold"
+              // onClick={handleSelectAll}
+            >
+              Select All
+            </Button>
+            <Button variant="secondary" className="font-semibold">
+              Deselect All
+            </Button>
+            <Button
+              className={cn("font-semibold disabled:cursor-not-allowed")}
+              disabled={!newPlaylistName}
+            >
+              Create Playlist
+            </Button>
+          </div>
+        </section>
+      )}
       <div className="w-3/4 h-12 my-5 px-3 bg-[#EEF2FD] dark:bg-[#19244B] rounded-md flex justify-start items-center gap-4">
         {theme === "dark" ? (
           <Info stroke="#9CABF8" size={14} />
@@ -62,11 +103,14 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 ">
         {data?.pages.flatMap((page) =>
           page.tracks.map((track, i) => (
-            <OwnedRecommendedTrackCard
-              playlist_id={playlist_id}
-              handleCardClick={handleCardClick}
-              track_detail={track}
+            <RecommendedTrackCard
               key={`${i}-${track}`}
+              playlist_id={playlist_id}
+              handleNotIsOwnedCardClick={handleNotIsOwnedCardClick}
+              track_detail={track}
+              isOwned={isOwned}
+              hasSelectedAll={false}
+              // isSelected={selectedTrack.has(trackData[track]?.track_uri)}
             />
           ))
         )}
