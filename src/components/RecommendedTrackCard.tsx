@@ -9,7 +9,7 @@ import {
   TooltipTrigger
 } from "./ui/tooltip"
 import { cn } from "@/lib/utils"
-import ReusableRecommendedTrackCard from "./DynamicRecommendedTrackCard"
+import DynamicRecommendedTrackCard from "./DynamicRecommendedTrackCard"
 
 type RecommendedTrackCardProps = {
   playlist_id: string
@@ -21,12 +21,12 @@ type RecommendedTrackCardProps = {
 
 const RecommendedTrackCard = React.memo(
   ({
+    playlist_id,
     handleNotIsOwnedCardClick,
     track_detail,
     isOwned
   }: RecommendedTrackCardProps) => {
     const [__, artist_name, track_name, _] = track_detail.split(" - ")
-    console.log(artist_name)
     const { data, isLoading } = useSpotifyTrackSearch(track_detail)
 
     const [isImageLoaded, setIsImageLoaded] = useState(false)
@@ -101,9 +101,11 @@ const RecommendedTrackCard = React.memo(
     }
 
     return (
-      <ReusableRecommendedTrackCard
+      <DynamicRecommendedTrackCard
         {...sharedProps}
         onClick={!isOwned ? handleOnClick : undefined}
+        track_uri={data?.track_uri ?? ""}
+        playlist_id={playlist_id}
       />
     )
   }

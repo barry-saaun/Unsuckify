@@ -45,6 +45,8 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
   const [isCreated, setIsCreated] = useState<boolean>(false)
   const [isCreatedLoading, setIsCreatedLoading] = useState<boolean>(false)
 
+  console.log(selectedTracks)
+
   useEffect(() => {
     const handleGetUserId = async () => {
       try {
@@ -146,7 +148,9 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
         )}
 
         <h1 className="text-[#556BC8] dark:text-[#9CABF8] text-sm font-[500]">
-          Click on a card to select or deselect track for your new playlist.
+          {isOwned
+            ? "Add track to your playlist"
+            : "Click on a card to select or deselect track for your new playlist."}
         </h1>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 ">

@@ -1,4 +1,4 @@
-import { Check, Plus } from "lucide-react"
+import { Check, CheckCircle2Icon, Plus } from "lucide-react"
 import { Button } from "./ui/button"
 import {
   Card,
@@ -16,7 +16,9 @@ import {
 } from "./ui/tooltip"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
-import { HTMLAttributes } from "react"
+import { HTMLAttributes, useState } from "react"
+import { spotifyApi } from "@/lib/services/spotify"
+import { Spinner } from "./Icons"
 
 interface DynamicRecommendedTrackCardProps
   extends HTMLAttributes<HTMLDivElement> {
@@ -28,6 +30,8 @@ interface DynamicRecommendedTrackCardProps
   tooltipContent: string
   cardClassName?: string
   isSelected?: boolean
+  playlist_id: string
+  track_uri: string
 }
 
 /**
@@ -42,8 +46,28 @@ const DynamicRecommendedTrackCard = ({
   tooltipContent,
   cardClassName,
   isSelected,
+  playlist_id,
+  track_uri,
   ...props
 }: DynamicRecommendedTrackCardProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isAdded, setIsAdded] = useState<boolean>(false)
+
+  const handleAddTrackToOwnedPlaylist = async () => {
+    try {
+      setIsLoading(true)
+      await spotifyApi.addItemsToPlaylist(playlist_id, {
+        uris: [track_uri]
+      })
+
+      setIsAdded(true)
+
+      setIsLoading(false)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -80,9 +104,20 @@ const DynamicRecommendedTrackCard = ({
             </CardHeader>
             {isOwned ? (
               <CardFooter>
-                <Button className="w-full flex justify-center items-center gap-4 mx-5 font-semibold ">
-                  <Plus />
-                  <span>Add To Playlist</span>
+                <Button
+                  className="w-full flex justify-center items-center gap-4 mx-5 font-semibold "
+                  onClick={handleAddTrackToOwnedPlaylist}
+                >
+                  {isLoading ? (
+                    <Spinner />
+                  ) : isAdded ? (
+                    <CheckCircle2Icon className="transition-all  animate-jump-in animate-ease-out" />
+                  ) : (
+                    <>
+                      <Plus />
+                      {"Add to Playlist"}
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             ) : null}
