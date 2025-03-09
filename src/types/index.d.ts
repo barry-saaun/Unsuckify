@@ -6,6 +6,13 @@ export type ErrorResponse = {
 
 export type SpotifyFetchResponse<T> = T | ErrorResponse
 
+export type SpotifyPostResponse<T> = T | ErrorResponse
+
+export type PostRequestBody = Record<
+  string,
+  string | string[] | boolean | number
+>
+
 export type BreakpointValues = {
   DEFAULT: string
   SM: string

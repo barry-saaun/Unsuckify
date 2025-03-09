@@ -1,17 +1,20 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { fetchPaginatedRecommendedTracks } from "@/lib/services/api-utils/tracks"
 import { PaginatedQueryKeyType } from "@/types/index"
 import RecommendedTrackCard from "./RecommendedTrackCard"
 import { Button } from "./ui/button"
 import { Spinner } from "./Icons"
-import { Info } from "lucide-react"
+import { CheckCircle2Icon, Info } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { useDebounce } from "@uidotdev/usehooks"
 import { Card, CardContent } from "./ui/card"
 import PlaylistPrivacySection from "./PlaylistPrivacySection"
+import { getUserIdAction } from "@/app/actions"
+import { spotifyApi } from "@/lib/services/spotify"
+import { assertError } from "@/lib/utils"
 
 type RecommendationsProps = {
   playlist_id: string
@@ -29,14 +32,55 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
       getNextPageParam: (lastPage) => lastPage.nextPage
     })
 
-  const [newPlaylistName, setNewPlaylistName] = useState("")
+  const [newPlaylistName, setNewPlaylistName] = useState<string>("")
   const debouncedNewPlaylistName = useDebounce(newPlaylistName, 300)
 
   const [selectedTracks, setSelectedTracks] = useState(
     new Set<string>(new Set())
   )
 
-  const [isPublic, setIsPublic] = useState(true)
+  const [isPublic, setIsPublic] = useState<boolean>(true)
+  const [userId, setUserId] = useState<string>("")
+
+  const [isCreated, setIsCreated] = useState<boolean>(false)
+  const [isCreatedLoading, setIsCreatedLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    const handleGetUserId = async () => {
+      try {
+        const id = await getUserIdAction()
+        setUserId(id!)
+      } catch (error) {}
+    }
+    handleGetUserId()
+  }, [])
+
+  const handleCreateNewPlaylist = async () => {
+    try {
+      setIsCreatedLoading(true)
+      const data = await spotifyApi.createNewPlaylist(userId, {
+        name: debouncedNewPlaylistName,
+        isPublic
+      })
+
+      if ("error" in data) {
+        assertError("cannot create new data", 401)
+        return
+      }
+
+      const newPlaylistId = data.id
+
+      await spotifyApi.addItemsToPlaylist(newPlaylistId, {
+        uris: Array.from(selectedTracks)
+      })
+      setIsCreatedLoading(false)
+      setIsCreated(true)
+
+      setTimeout(() => setIsCreated(false), 2000)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handleNotIsOwnedCardClick = (track_uri: string) => {
     setSelectedTracks((prev) => {
@@ -53,11 +97,8 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
     })
   }
 
-  console.log(selectedTracks)
-  console.log(debouncedNewPlaylistName)
-
   return (
-    <div className="container  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen border-none ">
+    <div className="  mx-auto flex flex-col gap-2 justify-center items-center min-h-screen border-none ">
       {!isOwned && (
         <Card className="mb-8 w-full">
           <CardContent className="p-6 space-y-5">
@@ -82,10 +123,17 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
               onPrivacyChange={setIsPublic}
             />
             <Button
-              className="w-full font-semibold disabled:cursor-not-allowed"
+              className="w-full font-semibold disabled:cursor-not-allowed flex justify-center items-center"
               disabled={!newPlaylistName}
+              onClick={handleCreateNewPlaylist}
             >
-              Create New Playlist
+              {isCreatedLoading ? (
+                <Spinner />
+              ) : isCreated ? (
+                <CheckCircle2Icon className="transition-all  animate-jump-in animate-ease-out" />
+              ) : (
+                "Create playlist"
+              )}
             </Button>
           </CardContent>
         </Card>
@@ -118,7 +166,7 @@ const Recommendations = ({ playlist_id, isOwned }: RecommendationsProps) => {
         <Button
           disabled={isFetchingNextPage}
           onClick={() => fetchNextPage()}
-          className="self-center mt-5 w-32"
+          className="flex justify-center items-center mt-5 w-32 "
         >
           {isFetchingNextPage ? (
             <Spinner />

@@ -1,10 +1,16 @@
 import {
+  CreatePlaylistResponse,
   SinglePlaylistResponse,
   type CurrentUsersProfileResponse,
   type ListOfCurrentUsersPlaylistsResponse,
   type PlaylistTrackResponse
 } from "spotify-api"
-import { OffsetLimitParams, SpotifyFetchResponse } from "@/types/index"
+import {
+  OffsetLimitParams,
+  PostRequestBody,
+  SpotifyFetchResponse,
+  SpotifyPostResponse
+} from "@/types/index"
 import queryString from "query-string"
 import { getAccessToken } from "../auth/utils"
 import { assertError } from "../utils"
@@ -57,6 +63,43 @@ async function spotifyFetch<T>(
   }
 }
 
+async function spotifyPost<T>(
+  endpoint: string,
+  requestBody: PostRequestBody,
+  params?: Record<string, string>
+): Promise<SpotifyPostResponse<T>> {
+  try {
+    const access_token = await getAccessToken()
+
+    if (!access_token) {
+      return assertError("Access Token is missing or invalid", 401)
+    }
+
+    const resolvedEndpoint = params
+      ? Object.keys(params).reduce(
+          (url, key) => url.replace(`{${key}}`, params[key]),
+          endpoint
+        )
+      : endpoint
+
+    const { data } = await axios.post<T>(
+      `https://api.spotify.com/v1${resolvedEndpoint}`,
+      requestBody,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    )
+
+    return data as T
+  } catch (error) {
+    console.error(error)
+    return assertError("Error in making POST request", 500)
+  }
+}
+
 export const spotifyApi = {
   getCurrentUsersProfile: () =>
     spotifyFetch<CurrentUsersProfileResponse>("/me"),
@@ -81,5 +124,13 @@ export const spotifyApi = {
         playlist_id
       },
       queryParams
-    )
+    ),
+  createNewPlaylist: (userId: string, requestBody: PostRequestBody) =>
+    spotifyPost<CreatePlaylistResponse>(
+      "/users/{userId}/playlists",
+      requestBody,
+      { userId }
+    ),
+  addItemsToPlaylist: (playlist_id: string, requestBody: PostRequestBody) =>
+    spotifyPost("/playlists/{playlist_id}/tracks", requestBody, { playlist_id })
 }

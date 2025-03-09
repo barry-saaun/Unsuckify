@@ -21,12 +21,12 @@ type RecommendedTrackCardProps = {
 
 const RecommendedTrackCard = React.memo(
   ({
-    playlist_id,
     handleNotIsOwnedCardClick,
     track_detail,
     isOwned
   }: RecommendedTrackCardProps) => {
     const [__, artist_name, track_name, _] = track_detail.split(" - ")
+    console.log(artist_name)
     const { data, isLoading } = useSpotifyTrackSearch(track_detail)
 
     const [isImageLoaded, setIsImageLoaded] = useState(false)
@@ -105,7 +105,7 @@ const RecommendedTrackCard = React.memo(
           <ReusableRecommendedTrackCard
             isOwned={isOwned}
             track_name={track_name}
-            artist_name={track_name}
+            artist_name={artist_name}
             image_src={data?.album_image}
             isImageLoaded={isImageLoaded}
             tooltipContent={tooltipContent}
@@ -117,7 +117,6 @@ const RecommendedTrackCard = React.memo(
               isSelected && "ring-2 ring-primary"
             )}
             onClick={handleOnClick}
-            // handleNotIsOwnedCardClick={handleNotIsOwnedCardClick}
           />
         )}
       </>
