@@ -84,42 +84,27 @@ const RecommendedTrackCard = React.memo(
       )
     }
 
+    const sharedProps = {
+      isOwned,
+      track_name,
+      artist_name,
+      image_src: data?.album_image,
+      isImageLoaded,
+      tooltipContent,
+      onMouseEnter: () => setIsHoverd(true),
+      onMouseLeave: () => setIsHoverd(false),
+      isSelected,
+      cardClassName: cn(
+        isHovered && "transform-gpu scale-[1.03] shadow-lg",
+        !isOwned && isSelected && "ring-2 ring-primary"
+      )
+    }
+
     return (
-      <>
-        {isOwned ? (
-          <ReusableRecommendedTrackCard
-            isOwned={isOwned}
-            track_name={track_name}
-            artist_name={artist_name}
-            image_src={data?.album_image}
-            isImageLoaded={isImageLoaded}
-            tooltipContent={tooltipContent}
-            onMouseEnter={() => setIsHoverd(true)}
-            onMouseLeave={() => setIsHoverd(false)}
-            isSelected={isSelected}
-            cardClassName={cn(
-              isHovered && "transform-gpu scale-[1.03] shadow-lg"
-            )}
-          />
-        ) : (
-          <ReusableRecommendedTrackCard
-            isOwned={isOwned}
-            track_name={track_name}
-            artist_name={artist_name}
-            image_src={data?.album_image}
-            isImageLoaded={isImageLoaded}
-            tooltipContent={tooltipContent}
-            onMouseEnter={() => setIsHoverd(true)}
-            onMouseLeave={() => setIsHoverd(false)}
-            isSelected={isSelected}
-            cardClassName={cn(
-              isHovered && "transform-gpu scale-[1.03] shadow-lg",
-              isSelected && "ring-2 ring-primary"
-            )}
-            onClick={handleOnClick}
-          />
-        )}
-      </>
+      <ReusableRecommendedTrackCard
+        {...sharedProps}
+        onClick={!isOwned ? handleOnClick : undefined}
+      />
     )
   }
 )
