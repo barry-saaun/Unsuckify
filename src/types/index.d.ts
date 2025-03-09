@@ -4,7 +4,7 @@ export type ErrorResponse = {
   success: boolean
 }
 
-export type SpotifyFetchReturnType<T> = Promise<T | ErrorResponse>
+export type SpotifyFetchResponse<T> = T | ErrorResponse
 
 export type BreakpointValues = {
   DEFAULT: string

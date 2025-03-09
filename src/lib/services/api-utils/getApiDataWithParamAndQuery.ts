@@ -1,5 +1,5 @@
 import { Context } from "hono"
-import { SpotifyFetchReturnType } from "@/types/index"
+import { SpotifyFetchResponse } from "@/types/index"
 import { serverGetData } from "./serverGetData"
 import { assertError } from "../../utils"
 
@@ -8,7 +8,7 @@ async function getApiDataWithParamAndQuery<T extends object | null>(
   fetchFn: (
     paramName: string,
     queryKeysValues: Record<string, string | number>
-  ) => SpotifyFetchReturnType<T>,
+  ) => Promise<SpotifyFetchResponse<T>>,
   paramName: string,
   queryKeys: string[]
 ) {

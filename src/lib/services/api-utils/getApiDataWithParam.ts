@@ -1,11 +1,11 @@
 import { Context } from "hono"
-import { SpotifyFetchReturnType } from "@/types/index"
+import { SpotifyFetchResponse } from "@/types/index"
 import { serverGetData } from "./serverGetData"
 import { assertError } from "../../utils"
 
 async function getApiDataWithParam<T extends object | null>(
   c: Context,
-  fetchFn: (param: string) => SpotifyFetchReturnType<T>,
+  fetchFn: (param: string) => Promise<SpotifyFetchResponse<T>>,
   paramName: string
 ) {
   return serverGetData(c, async () => {

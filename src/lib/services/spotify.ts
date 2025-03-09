@@ -4,7 +4,7 @@ import {
   type ListOfCurrentUsersPlaylistsResponse,
   type PlaylistTrackResponse
 } from "spotify-api"
-import { OffsetLimitParams, SpotifyFetchReturnType } from "@/types/index"
+import { OffsetLimitParams, SpotifyFetchResponse } from "@/types/index"
 import queryString from "query-string"
 import { getAccessToken } from "../auth/utils"
 import { assertError } from "../utils"
@@ -14,7 +14,7 @@ async function spotifyFetch<T>(
   endpoint: string,
   params?: Record<string, string>,
   queryParams?: Record<string, number | string>
-): SpotifyFetchReturnType<T> {
+): Promise<SpotifyFetchResponse<T>> {
   try {
     const access_token = await getAccessToken()
 
