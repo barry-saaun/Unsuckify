@@ -40,7 +40,7 @@ const PlaylistJsonDataScroll = ({
             maxHeight: "400px"
           }}
         >
-          <div className="h-full">
+          <div className="h-full overflow-y-clip">
             <CodeGenerationEffect
               fullCode={fullCode}
               renderMsPerBatch={renderMsPerBatch}
